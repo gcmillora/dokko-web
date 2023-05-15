@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
 export const updateOnePatient = async (
   patient_id: string,
@@ -17,15 +17,13 @@ export const updateOnePatient = async (
     variables: {
       id: patient_id,
       fullName: patient.fullName,
-      email: patient.email,
-      phoneNumber: patient.phoneNumber,
+      phoneNumber: patient.contact,
       address: patient.address,
     },
     mutation: gql`
       mutation (
         $id: ID!
         $fullName: String!
-        $email: String!
         $phoneNumber: String!
         $address: String!
       ) {
@@ -33,7 +31,6 @@ export const updateOnePatient = async (
           id: $id
           data: {
             fullName: $fullName
-            email: $email
             phoneNumber: $phoneNumber
             address: $address
           }

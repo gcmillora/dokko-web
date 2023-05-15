@@ -28,6 +28,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         query ($email: String!) {
           doctors(filters: { email: { eq: $email } }) {
             data {
+              id
               attributes {
                 uid
                 fullName
@@ -54,6 +55,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         query ($email: String!) {
           patients(filters: { email: { eq: $email } }) {
             data {
+              id
               attributes {
                 uid
                 fullName
@@ -79,11 +81,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         localStorage.setItem("jwtToken", response.data.jwt);
         if (response.data.user.level === "patient") {
           const patient = await findOnePatient(data.email);
-
+          localStorage.setItem("id", patient.patients.data[0].id);
           localStorage.setItem("uid", patient.patients.data[0].attributes.uid);
           router.push(`/patient/${patient.patients.data[0].attributes.uid}`);
         } else if (response.data.user.level === "doctor") {
           const doctor = await findOneDoctor(data.email);
+          localStorage.setItem("id", doctor.patients.data[0].id);
 
           localStorage.setItem("uid", doctor.doctors.data[0].attributes.uid);
           router.push(`/doctor/${doctor.doctors.data[0].attributes.uid}`);

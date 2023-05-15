@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { ModeToggle } from "./mode-toggle";
 
 interface IMyComponentProps extends React.HTMLAttributes<HTMLElement> {
-  patientid: string;
+  id: string;
 }
 
 export function MainNav({ className, ...props }: IMyComponentProps) {
@@ -21,31 +21,31 @@ export function MainNav({ className, ...props }: IMyComponentProps) {
       {...props}
     >
       <Link
-        href={`/patient/${props?.patientid}/`}
+        href={`/patient/${props?.id}/`}
         className="text-sm font-medium transition-colors hover:text-primary"
       >
         Overview
       </Link>
       <Link
-        href={`/patient/${props?.patientid}/appointments`}
+        href={`/patient/${props?.id}/appointments`}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Appointments
       </Link>
       <Link
-        href={`/patient/${props?.patientid}/prescriptions`}
+        href={`/patient/${props?.id}/prescriptions`}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Prescriptions
       </Link>
       <Link
-        href={`/patient/${props?.patientid}/prescriptions`}
+        href={`/patient/${props?.id}/record`}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Medical Record
       </Link>
       <Link
-        href={`/patient/${props?.patientid}/settings`}
+        href={`/patient/${props?.id}/settings`}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Settings

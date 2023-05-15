@@ -33,10 +33,10 @@ export const metadata: Metadata = {
 };
 
 interface pageProps {
-  params: { patient_id: string };
+  params: { doctor_id: string };
 }
 
-async function getData(patientid: string) {
+async function getData(doctorid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
       revalidate: 20,
@@ -49,7 +49,7 @@ async function getData(patientid: string) {
     body: JSON.stringify({
       query: patientAppointmentsQuery,
       variables: {
-        uid: patientid,
+        uid: doctorid,
       },
     }),
   });
@@ -61,7 +61,7 @@ async function getData(patientid: string) {
   return res.json();
 }
 
-async function getPrescriptions(patientid: string) {
+async function getPrescriptions(doctorid: string) {
   console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
@@ -74,7 +74,7 @@ async function getPrescriptions(patientid: string) {
     body: JSON.stringify({
       query: patientPrescriptionsQuery,
       variables: {
-        uid: patientid,
+        uid: doctorid,
       },
     }),
   });
@@ -87,8 +87,8 @@ async function getPrescriptions(patientid: string) {
 }
 
 export default async function DashboardPage({ params }: pageProps) {
-  const fetchedAppointments = await getData(params.patient_id);
-  const fetchedPrescriptions = await getPrescriptions(params.patient_id);
+  const fetchedAppointments = await getData(params.doctor_id);
+  const fetchedPrescriptions = await getPrescriptions(params.doctor_id);
 
   const prescriptions = fetchedPrescriptions.data.prescriptions;
   const appointments = fetchedAppointments.data.appointments;
@@ -174,7 +174,7 @@ export default async function DashboardPage({ params }: pageProps) {
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
-            <MainNav className="mx-6" {...{ id: params.patient_id }} />
+            <MainNav className="mx-6" {...{ id: params.doctor_id }} />
             <div className="ml-auto flex items-center space-x-4">
               <UserNav />
             </div>

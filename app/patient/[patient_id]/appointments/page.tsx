@@ -22,8 +22,13 @@ import { findAllDoctorQuery } from "@/query/findDoctors";
 interface pageProps {
   params: { patient_id: string };
 }
+
+export const metadata: Metadata = {
+  title: "Appointments | Dokko",
+  description: "Appointments",
+};
 async function getData(patientid: string) {
-  const res = await fetch("http://127.0.0.1:1337/graphql", {
+  const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
       revalidate: 20,
     },
@@ -48,7 +53,7 @@ async function getData(patientid: string) {
 }
 
 async function getDoctors() {
-  const res = await fetch("http://127.0.0.1:1337/graphql", {
+  const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
       revalidate: 20,
     },
@@ -119,7 +124,7 @@ export default async function Page({ params }: pageProps) {
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
-            <MainNav className="mx-6" {...{ patientid: params.patient_id }} />
+            <MainNav className="mx-6" {...{ id: params.patient_id }} />
             <div className="ml-auto flex items-center space-x-4">
               <UserNav />
             </div>
