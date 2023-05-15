@@ -1,4 +1,4 @@
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
 //using graphql
 export const findDoctors = async (jwtToken: string, selected: string) => {
@@ -17,12 +17,13 @@ export const findDoctors = async (jwtToken: string, selected: string) => {
     },
     query: gql`
       query ($specialty: String!) {
-        doctors(filters: { specialty: { eq: $specialty } }) {
+        doctors() {
           data {
             id
             attributes {
               uid
               fullName
+              specialty
             }
           }
         }
@@ -32,3 +33,16 @@ export const findDoctors = async (jwtToken: string, selected: string) => {
 
   return data;
 };
+
+export const findAllDoctorQuery = `query {
+  doctors{
+    data {
+      id
+      attributes {
+        uid
+        fullName
+        specialty
+      }
+    }
+  }
+}`;

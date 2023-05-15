@@ -1,6 +1,6 @@
 //find all prescriptions for a patient with pagination
 
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
 export const findAllPrescriptions = async (
   patient_id: string,
@@ -13,14 +13,10 @@ export const findAllPrescriptions = async (
   const { data } = await client.query({
     variables: {
       uid: patient_id,
-      page: page,
     },
     query: gql`
       query ($uid: String!, $page: Int!) {
-        prescriptions(
-          filters: { patient: { uid: { eq: $uid } } }
-          pagination: { page: $page, pageSize: 8 }
-        ) {
+        prescriptions(filters: { patient: { uid: { eq: $uid } } }) {
           data {
             id
             attributes {
@@ -43,6 +39,7 @@ export const findAllPrescriptions = async (
               }
               appointment {
                 data {
+                  id
                   attributes {
                     uid
                     appointmentDate
@@ -67,3 +64,62 @@ export const findAllPrescriptions = async (
 
   return data;
 };
+
+export const patientPrescriptionsQuery = `query ($uid: String!) {
+  prescriptions(filters: { patient: { uid: { eq: $uid } } }) {
+    data {
+      id
+      attributes {
+        uid
+        patient {
+          data {
+            id
+            attributes {
+              uid
+              fullName
+              profilepicture{
+                data{
+                  id
+                  attributes{
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        doctor {
+          data {
+            id
+            attributes {
+              uid
+              fullName
+              profilepicture{
+                data{
+                  id
+                  attributes{
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        appointment {
+          data {
+            id
+            attributes {
+              uid
+              appointmentDate
+              condition
+              typeOfVisit
+            }
+          }
+        }
+        prescription
+        diagnosis
+        notes
+      }
+    }
+  }
+}`;

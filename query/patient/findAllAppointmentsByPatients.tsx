@@ -1,22 +1,22 @@
 //find all appointments with pagination using graphql for a patient
 
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
-export const findAllAppointments = async (patient_id: string, page: number) => {
+export const findAllAppointments = async (patient_id: string) => {
+  console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
   const client = new ApolloClient({
+    ssrMode: true,
     uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
     cache: new InMemoryCache(),
   });
   const { data } = await client.query({
     variables: {
       uid: patient_id,
-      page: page,
     },
     query: gql`
-      query ($uid: String!, $page: Int!) {
+      query ($uid: String!) {
         appointments(
           filters: { patient: { uid: { eq: $uid } } }
-          pagination: { page: $page, pageSize: 8 }
           sort: "appointmentDate:desc"
         ) {
           data {
@@ -43,11 +43,7 @@ export const findAllAppointments = async (patient_id: string, page: number) => {
               typeOfVisit
               status
               condition
-            }
-          }
-          meta {
-            pagination {
-              total
+              notes
             }
           }
         }
@@ -57,3 +53,110 @@ export const findAllAppointments = async (patient_id: string, page: number) => {
 
   return data;
 };
+
+export const patientAppointmentsQuery = `query ($uid: String!) {
+  appointments(
+    filters: { patient: { uid: { eq: $uid } } }
+    sort: "appointmentDate:desc"
+  ) {
+    data {
+      id
+      attributes {
+        uid
+        patient {
+          
+          data {
+            id
+            attributes {
+              uid
+              fullName
+              profilepicture{
+                data{
+                  attributes{
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        doctor {
+          data {
+            id
+            attributes {
+              uid
+              fullName
+              profilepicture{
+                data{
+                  attributes{
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        appointmentDate
+        typeOfVisit
+        status
+        generalPurpose
+        condition
+        notes
+      }
+    }
+  }
+}
+`;
+
+export const patientAppointmentsQueryByID = `query ($id: ID!) {
+  appointments(
+    filters: { id: {eq: $id} }
+    sort: "appointmentDate:desc"
+  ) {
+    data {
+      id
+      attributes {
+        uid
+        patient {
+          
+          data {
+            id
+            attributes {
+              uid
+              fullName
+              profilepicture{
+                data{
+                  attributes{
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        doctor {
+          data {
+            id
+            attributes {
+              uid
+              fullName
+              profilepicture{
+                data{
+                  attributes{
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        appointmentDate
+        typeOfVisit
+        status
+        condition
+        notes
+      }
+    }
+  }
+}
+`;

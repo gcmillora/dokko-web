@@ -2,6 +2,9 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Inter as FontSans } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { StyleSwitcher } from "@/components/style-switcher";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,8 +25,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+
+          <TailwindIndicator />
+        </ThemeProvider>
         <Toaster />
+        <StyleSwitcher />
       </body>
     </html>
   );

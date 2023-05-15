@@ -10,57 +10,99 @@ import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ui/use-toast";
+import { uuid } from "uuidv4";
 
 interface UserRegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function UserRegisterForm({
   className,
   ...props
 }: UserRegisterFormProps) {
+  const uid = uuid();
   const router = useRouter();
   const { toast } = useToast();
-  const findOneDoctor = async (email: string) => {
+
+  const createPatient = async (
+    userName: string,
+    email: string,
+    uid: string,
+    fullName: string
+  ) => {
     const client = new ApolloClient({
       uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
       cache: new InMemoryCache(),
     });
-    const { data } = await client.query({
+
+    const { data } = await client.mutate({
       variables: {
+        fullName: fullName,
         email: email,
+        address: "address",
+        status: true,
+        uid: uid,
       },
-      query: gql`
-        query ($email: String!) {
-          doctors(filters: { email: { eq: $email } }) {
+      mutation: gql`
+        mutation (
+          $fullName: String!
+          $email: String!
+          $address: String!
+          $status: Boolean!
+          $uid: String!
+        ) {
+          createPatient(
+            data: {
+              fullName: $fullName
+              email: $email
+              address: $address
+              status: $status
+              uid: $uid
+            }
+          ) {
             data {
+              id
               attributes {
                 uid
                 fullName
                 email
+                address
+                status
               }
             }
           }
         }
       `,
     });
+
+    const record = await createMedicalRecord(data);
+
     return data;
   };
 
-  const findOnePatient = async (email: string) => {
+  const createMedicalRecord = async (patientRecord: any) => {
     const client = new ApolloClient({
       uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
       cache: new InMemoryCache(),
     });
-    const { data } = await client.query({
+
+    const { data } = await client.mutate({
       variables: {
-        email: email,
+        uid: uid,
+        patient: patientRecord.createPatient.data.id,
       },
-      query: gql`
-        query ($email: String!) {
-          patients(filters: { email: { eq: $email } }) {
+      mutation: gql`
+        mutation ($uid: String!, $patient: ID!) {
+          createMedicalRedicord(data: { uid: $uid, patient: $patient }) {
             data {
               attributes {
                 uid
-                fullName
-                email
+                patient {
+                  data {
+                    id
+                    attributes {
+                      uid
+                      fullName
+                    }
+                  }
+                }
               }
             }
           }
@@ -72,32 +114,39 @@ export function UserRegisterForm({
   };
 
   const onSubmit = (data: any) => {
-    console.log(data);
     axios
-      .post(`${process.env.NEXT_PUBLIC_BACKEND_STRAPI_RAW}/api/auth/local`, {
-        identifier: data.email,
-        password: data.password,
-      })
-      .then(async (response) => {
-        localStorage.setItem("jwtToken", response.data.jwt);
-        if (response.data.user.level === "patient") {
-          const patient = await findOnePatient(data.email);
-
-          localStorage.setItem("uid", patient.patients.data[0].attributes.uid);
-          router.push(`/patient/${patient.patients.data[0].attributes.uid}`);
-        } else if (response.data.user.level === "doctor") {
-          const doctor = await findOneDoctor(data.email);
-
-          localStorage.setItem("uid", doctor.doctors.data[0].attributes.uid);
-          router.push(`/doctor/${doctor.doctors.data[0].attributes.uid}`);
+      .post(
+        `${process.env.NEXT_PUBLIC_BACKEND_STRAPI_RAW}/api/auth/local/register`,
+        {
+          username: data.userName,
+          email: data.email,
+          password: data.password,
+          level: "patient",
+          uid: uid,
         }
+      )
+      .then(async (response) => {
+        const res = await createPatient(
+          data.userName,
+          data.email,
+          uid,
+          data.fullName
+        );
+        localStorage.setItem("jwtToken", response.data.jwt);
+        toast({
+          variant: "default",
+          title: "Patient created successfully",
+          description: "You will be redirected to login page",
+        });
+        setTimeout(() => {
+          router.push("/auth/login");
+        }, 2000);
       })
       .catch((error) => {
-        console.log("error");
         toast({
           variant: "destructive",
-          title: "Sign-in failed",
-          description: "Invalid email or password. Please try again.",
+          title: "Error: Couldn't create patient",
+          description: "Please try again later or check your information.",
         });
       });
   };
@@ -113,6 +162,46 @@ export function UserRegisterForm({
     <div className={cn("grid gap-6", className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-2">
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="fullName">
+              Full Name
+            </Label>
+            <Input
+              id="fullName"
+              placeholder="Juan Dela Cruz"
+              type="text"
+              autoCapitalize="none"
+              autoComplete="fullName"
+              autoCorrect="off"
+              disabled={isLoading}
+              {...register("fullName", {
+                required: true,
+              })}
+            />
+            {errors?.fullName && (
+              <p className="px-1 text-xs text-red-600">sadf</p>
+            )}
+          </div>
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="email">
+              Username
+            </Label>
+            <Input
+              id="userName"
+              placeholder="Username"
+              type="text"
+              autoCapitalize="none"
+              autoComplete="userName"
+              autoCorrect="off"
+              disabled={isLoading}
+              {...register("userName", {
+                required: true,
+              })}
+            />
+            {errors?.userName && (
+              <p className="px-1 text-xs text-red-600">sadf</p>
+            )}
+          </div>
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
               Email
@@ -169,7 +258,7 @@ export function UserRegisterForm({
             ) : (
               <Icons.login className="mr-2 h-4 w-4" />
             )}{" "}
-            Register
+            Continue
           </button>
         </div>
       </form>

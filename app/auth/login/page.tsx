@@ -27,7 +27,7 @@ export default function Page() {
         <UserAuthForm />
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
-            href="/register"
+            href="/auth/register"
             className="hover:text-brand underline underline-offset-4"
           >
             Don&apos;t have an account? Sign Up
