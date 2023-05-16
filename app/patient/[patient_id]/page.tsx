@@ -22,7 +22,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainNav } from "@/components/mainNav";
 import { UserNav } from "@/components/user-nav";
 import { patientAppointmentsQuery } from "@/query/patient/findAllAppointmentsByPatients";
-import { RecentAppointments } from "@/components/recent-apps";
+import { RecentAppointments } from "@/components/patient-dashboard/recent-apps";
 import { Overview } from "@/components/overview";
 import { doctorDefaultPhoto } from "@/utils/exports";
 import { patientPrescriptionsQuery } from "@/query/patient/findAllPrescriptionsByPatient";
@@ -174,7 +174,10 @@ export default async function DashboardPage({ params }: pageProps) {
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
-            <MainNav className="mx-6" {...{ id: params.patient_id }} />
+            <MainNav
+              className="mx-6"
+              {...{ id: params.patient_id, type: "patient" }}
+            />
             <div className="ml-auto flex items-center space-x-4">
               <UserNav />
             </div>

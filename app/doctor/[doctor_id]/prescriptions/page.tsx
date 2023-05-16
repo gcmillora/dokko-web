@@ -16,13 +16,15 @@ import { gql } from "@apollo/client";
 
 import { findAllDoctorQuery } from "@/query/findDoctors";
 import { patientPrescriptionsQuery } from "@/query/patient/findAllPrescriptionsByPatient";
-import { DataTable } from "@/components/prescriptionTablePatient/data-table";
-import { columns } from "@/components/prescriptionTablePatient/columns";
+import { DataTable } from "@/components/prescriptionTableDoctor/data-table";
+import { columns } from "@/components/prescriptionTableDoctor/columns";
+import { QueryAllPrescriptionsDoctor } from "@/query/doctor/findAllPrescriptionsByDoctor";
+import { QueryAllAppointmentsDoctor } from "@/query/doctor/findAllAppointmentsByDoctor";
 
 // Simulate a database read for tasks.
 
 interface pageProps {
-  params: { patient_id: string };
+  params: { doctor_id: string };
 }
 
 export const metadata: Metadata = {
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
   description: "Prescriptions",
 };
 
-async function getData(patientid: string) {
+async function getData(doctorid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
       revalidate: 20,
@@ -41,9 +43,34 @@ async function getData(patientid: string) {
       // 'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify({
-      query: patientPrescriptionsQuery,
+      query: QueryAllPrescriptionsDoctor,
       variables: {
-        uid: patientid,
+        uid: doctorid,
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    console.log("error");
+  }
+  return res.json();
+}
+
+async function getAppointments(doctorid: string) {
+  const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
+    next: {
+      revalidate: 5,
+    },
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // 'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      query: QueryAllAppointmentsDoctor,
+      variables: {
+        uid: doctorid,
       },
     }),
   });
@@ -56,7 +83,32 @@ async function getData(patientid: string) {
 }
 
 export default async function Page({ params }: pageProps) {
-  const data = await getData(params.patient_id);
+  const data = await getData(params.doctor_id);
+  const fetchedAppointments = await getAppointments(params.doctor_id);
+  const appointments = fetchedAppointments.data.appointments.data.map(
+    (appointment: any) => {
+      return {
+        id: [appointment.id, appointment.attributes.uid],
+        patient: [
+          appointment.attributes.patient.data.attributes.fullName,
+          appointment.attributes.patient.data.attributes.uid,
+          appointment.attributes.patient.data.id,
+        ],
+        doctor: [
+          appointment.attributes.doctor.data.attributes.fullName,
+          appointment.attributes.doctor.data.attributes.uid,
+          appointment.attributes.doctor.data.id,
+        ],
+        appointment: appointment.attributes.appointment,
+        uid: appointment.attributes.uid,
+        diagnosis: [
+          appointment.attributes.diagnosis,
+          appointment.attributes.prescription,
+          appointment.attributes.notes,
+        ],
+      };
+    }
+  );
 
   const prescriptions = data.data.prescriptions.data.map(
     (prescription: any) => {
@@ -91,7 +143,7 @@ export default async function Page({ params }: pageProps) {
           <div className="flex h-16 items-center px-4">
             <MainNav
               className="mx-6"
-              {...{ id: params.patient_id, type: "patient" }}
+              {...{ id: params.doctor_id, type: "doctor" }}
             />
             <div className="ml-auto flex items-center space-x-4">
               <UserNav />
@@ -107,7 +159,11 @@ export default async function Page({ params }: pageProps) {
           </div>
         </div>
         <div className="p-8 pt-2">
-          <DataTable data={prescriptions} columns={columns} />
+          <DataTable
+            data={prescriptions}
+            columns={columns}
+            appointments={appointments}
+          />
         </div>
       </div>
     </>

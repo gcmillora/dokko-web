@@ -4,7 +4,7 @@ import Image from "next/image";
 import { z } from "zod";
 
 import { UserNav } from "@/components/user-nav";
-import { columns } from "@/components/appointmentTablePatient/columns";
+import { columns } from "@/components/appointmentTableDoctor/columns";
 
 import { taskSchema } from "@/data/schema";
 import { MainNav } from "@/components/mainNav";
@@ -14,20 +14,21 @@ import {
 } from "@/query/patient/findAllAppointmentsByPatients";
 import { useEffect, useMemo, useState } from "react";
 import { gql } from "@apollo/client";
-import { DataTable } from "@/components/appointmentTablePatient/data-table";
+import { DataTable } from "@/components/appointmentTableDoctor/data-table";
 import { findAllDoctorQuery } from "@/query/findDoctors";
+import { QueryAllAppointmentsDoctor } from "@/query/doctor/findAllAppointmentsByDoctor";
 
 // Simulate a database read for tasks.
 
 interface pageProps {
-  params: { patient_id: string };
+  params: { doctor_id: string };
 }
 
 export const metadata: Metadata = {
   title: "Appointments | Dokko",
   description: "Appointments",
 };
-async function getData(patientid: string) {
+async function getData(doctorid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
       revalidate: 20,
@@ -38,9 +39,9 @@ async function getData(patientid: string) {
       // 'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify({
-      query: patientAppointmentsQuery,
+      query: QueryAllAppointmentsDoctor,
       variables: {
-        uid: patientid,
+        uid: doctorid,
       },
     }),
   });
@@ -73,17 +74,7 @@ async function getDoctors() {
 }
 
 export default async function Page({ params }: pageProps) {
-  const data = await getData(params.patient_id);
-  const fetchedDoctors = await getDoctors();
-
-  const doctors = fetchedDoctors?.data?.doctors?.data?.map((doctor: any) => {
-    return {
-      id: doctor.id,
-      fullName: doctor.attributes.fullName,
-      uid: doctor.attributes.uid,
-      specialty: doctor.attributes.specialty,
-    };
-  });
+  const data = await getData(params.doctor_id);
 
   const appointments = data.data.appointments.data.map((appointment: any) => {
     return {
@@ -126,7 +117,7 @@ export default async function Page({ params }: pageProps) {
           <div className="flex h-16 items-center px-4">
             <MainNav
               className="mx-6"
-              {...{ id: params.patient_id, type: "patient" }}
+              {...{ id: params.doctor_id, type: "doctor" }}
             />
             <div className="ml-auto flex items-center space-x-4">
               <UserNav />
@@ -142,7 +133,7 @@ export default async function Page({ params }: pageProps) {
           </div>
         </div>
         <div className="p-8 pt-2">
-          <DataTable data={appointments} columns={columns} doctors={doctors} />
+          <DataTable data={appointments} columns={columns} />
         </div>
       </div>
     </>

@@ -22,10 +22,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainNav } from "@/components/mainNav";
 import { UserNav } from "@/components/user-nav";
 import { patientAppointmentsQuery } from "@/query/patient/findAllAppointmentsByPatients";
-import { RecentAppointments } from "@/components/recent-apps";
+import { RecentAppointments } from "@/components/patient-dashboard/recent-apps";
 import { Overview } from "@/components/overview";
-import { doctorDefaultPhoto } from "@/utils/exports";
+import { doctorDefaultPhoto, patientDefaultPhoto } from "@/utils/exports";
 import { patientPrescriptionsQuery } from "@/query/patient/findAllPrescriptionsByPatient";
+import { QueryAllAppointmentsDoctor } from "@/query/doctor/findAllAppointmentsByDoctor";
+import { RecentAppointmentsDoctor } from "@/components/doctor-dashboard/recent-apps";
+import { QueryAllPrescriptionsDoctor } from "@/query/doctor/findAllPrescriptionsByDoctor";
+import { QueryOneDoctor } from "@/query/findOneDoctor";
+import { getAppointments, getDoctorData, getPrescriptions } from "./utils";
+import { DoctorUserNav } from "@/components/doctor-dashboard/user-nav";
 
 export const metadata: Metadata = {
   title: "Dashboard | Dokko",
@@ -36,59 +42,11 @@ interface pageProps {
   params: { doctor_id: string };
 }
 
-async function getData(doctorid: string) {
-  const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
-    next: {
-      revalidate: 20,
-    },
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      // 'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      query: patientAppointmentsQuery,
-      variables: {
-        uid: doctorid,
-      },
-    }),
-  });
-
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    console.log("error");
-  }
-  return res.json();
-}
-
-async function getPrescriptions(doctorid: string) {
-  console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
-  const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
-    next: {
-      revalidate: 20,
-    },
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: patientPrescriptionsQuery,
-      variables: {
-        uid: doctorid,
-      },
-    }),
-  });
-
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    console.log("error");
-  }
-  return res.json();
-}
-
 export default async function DashboardPage({ params }: pageProps) {
-  const fetchedAppointments = await getData(params.doctor_id);
+  const fetchedAppointments = await getAppointments(params.doctor_id);
   const fetchedPrescriptions = await getPrescriptions(params.doctor_id);
+  const fetchedDoctor = await getDoctorData(params.doctor_id);
+  const doctor = fetchedDoctor.data.doctors.data;
 
   const prescriptions = fetchedPrescriptions.data.prescriptions;
   const appointments = fetchedAppointments.data.appointments;
@@ -102,6 +60,9 @@ export default async function DashboardPage({ params }: pageProps) {
         doctorLink:
           appointment?.attributes?.doctor?.data?.attributes?.profilepicture
             ?.data?.attributes?.url || doctorDefaultPhoto,
+        patientLink:
+          appointment?.attributes?.patient?.data?.attributes?.profilepicture
+            ?.data?.attributes?.url || patientDefaultPhoto,
         date: appointment.attributes.appointmentDate,
         condition: appointment.attributes.condition,
         type: appointment.attributes.typeOfVisit,
@@ -168,15 +129,17 @@ export default async function DashboardPage({ params }: pageProps) {
     }
   });
 
-  console.log(recentApps[0].doctorLink);
   return (
     <>
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
-            <MainNav className="mx-6" {...{ id: params.doctor_id }} />
+            <MainNav
+              className="mx-6"
+              {...{ id: params.doctor_id, type: "doctor" }}
+            />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav />
+              <DoctorUserNav data={doctor} />
             </div>
           </div>
         </div>
@@ -248,7 +211,7 @@ export default async function DashboardPage({ params }: pageProps) {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RecentAppointments data={recentApps} />
+                    <RecentAppointmentsDoctor data={recentApps} />
                   </CardContent>
                 </Card>
               </div>
