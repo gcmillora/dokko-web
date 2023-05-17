@@ -1,7 +1,16 @@
 "use client";
 
 import { Row } from "@tanstack/react-table";
-import { Copy, MoreHorizontal, Pen, Star, Tags, Trash } from "lucide-react";
+import {
+  BookOpen,
+  Check,
+  Copy,
+  MoreHorizontal,
+  Pen,
+  Star,
+  Tags,
+  Trash,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +41,10 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
+import { X } from "lucide-react";
+import { updateOneAppointment } from "@/query/updateOneAppointment";
+import { useToast } from "../ui/use-toast";
+import { updateOneAppointmentById } from "@/query/updateOneAppointment copy";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -42,10 +55,33 @@ export function DataTableRowActions<TData>({
   row,
   data,
 }: DataTableRowActionsProps<TData>) {
+  const { toast } = useToast();
+
   const [type, setType] = useState("");
   const date: [any] = row.getValue("date");
   const patient: [any] = row.getValue("patient");
   const id: [any] = row.getValue("id");
+
+  const processAppointment = async (id: string, status: boolean) => {
+    const jwtToken = localStorage.getItem("jwtToken") || "";
+    const response = await updateOneAppointmentById(id, jwtToken, status);
+    if (response.error) {
+      toast({
+        variant: "destructive",
+        title: "Appointment approval failed.",
+        description: "Please try again later",
+      });
+    } else {
+      toast({
+        variant: "default",
+        title: "Approintment has been approved!",
+        description: `Your appointment has been created with the following details:\n
+          Date: ${new Date(date[0]).toLocaleString()}\n
+        `,
+      });
+    }
+    return response;
+  };
 
   return (
     <Dialog>
@@ -62,7 +98,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuContent align="end" className="w-[160px]">
           <DialogTrigger asChild>
             <DropdownMenuItem onClick={() => setType("open")}>
-              <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              <BookOpen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
               Open
             </DropdownMenuItem>
           </DialogTrigger>
@@ -72,10 +108,17 @@ export function DataTableRowActions<TData>({
               Edit
             </DropdownMenuItem>
           </DialogTrigger>
+          <DropdownMenuItem onClick={() => processAppointment(id[0], true)}>
+            <Check className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Approve
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => processAppointment(id[0], false)}>
+            <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Decline
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Delete
-            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

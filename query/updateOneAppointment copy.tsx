@@ -2,10 +2,10 @@
 
 import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
-export const updateOneAppointment = async (
+export const updateOneAppointmentById = async (
   appointment_id: string,
   jwtToken: string,
-  appointment: any
+  status: boolean
 ) => {
   const client = new ApolloClient({
     uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
@@ -18,34 +18,11 @@ export const updateOneAppointment = async (
   const { data } = await client.mutate({
     variables: {
       id: appointment_id,
-      status: appointment.status,
-      condition: appointment.condition,
-      generalPurpose: appointment.generalPurpose,
-      notes: appointment.notes,
-      typeOfVisit: appointment.typeOfVisit,
-      active: appointment.active,
+      status: status,
     },
     mutation: gql`
-      mutation (
-        $id: ID!
-        $active: Boolean!
-        $condition: String!
-        $generalPurpose: String!
-        $notes: String!
-        $typeOfVisit: String!
-        $status: Boolean!
-      ) {
-        updateAppointment(
-          id: $id
-          data: {
-            status: $status
-            condition: $condition
-            generalPurpose: $generalPurpose
-            notes: $notes
-            typeOfVisit: $typeOfVisit
-            active: $active
-          }
-        ) {
+      mutation ($id: ID!, $status: Boolean!) {
+        updateAppointment(id: $id, data: { status: $status }) {
           data {
             id
             attributes {
