@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   description: "Records",
 };
 export default async function RecordPage({ params }: pageProps) {
+  const id = params.patient_id;
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -31,7 +32,7 @@ export default async function RecordPage({ params }: pageProps) {
               {...{ id: params.patient_id, type: "patient" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav />
+              <UserNav id={id} type={"patient"} />
             </div>
           </div>
         </div>

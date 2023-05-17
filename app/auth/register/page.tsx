@@ -23,7 +23,7 @@ export default function RegisterPage() {
       >
         Login
       </Link>
-      <div className="hidden h-full bg-primary lg:block"></div>
+      <div className="hidden h-full bg-logo lg:block"></div>
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">

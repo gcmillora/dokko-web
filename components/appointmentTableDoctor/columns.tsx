@@ -92,7 +92,7 @@ export const columns: ColumnDef<any>[] = [
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            <Link href={`${row.getValue("uid")}`}>{row.getValue("type")}</Link>
+            <Link href={`${row.getValue("id")}`}>{row.getValue("type")}</Link>
           </span>
         </div>
       );
@@ -106,8 +106,33 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">
+          <span className="max-w-[250px] truncate font-medium">
             {row.getValue("generalPurpose")}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[250px] truncate font-medium">
+            {row.getValue("status") ? (
+              <span>
+                {" "}
+                <Badge variant="constructive">Approved</Badge>{" "}
+              </span>
+            ) : (
+              <span>
+                {" "}
+                <Badge variant="destructive">Pending</Badge>{" "}
+              </span>
+            )}
           </span>
         </div>
       );

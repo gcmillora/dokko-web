@@ -83,7 +83,7 @@ export default async function Page({ params }: pageProps) {
       };
     }
   );
-
+  const id = prescriptions[0].patient[2];
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -94,7 +94,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.patient_id, type: "patient" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav />
+              <UserNav id={id} type={"patient"} />
             </div>
           </div>
         </div>

@@ -80,7 +80,7 @@ export function DataTableToolbar<TData>({
     const response = await insertOnePrescription(
       jwtToken,
       patientid,
-      data[0].doctor[2],
+      appointments[0].doctor[2],
       formData.prescription,
       true,
       formData.appointment,
@@ -96,7 +96,7 @@ export function DataTableToolbar<TData>({
       });
     } else {
       toast({
-        variant: "default",
+        variant: "constructive",
         title: "Prescription Created",
         description: `Your appointment has been created with the following details:\n
         Diagnosis: ${formData.diagnosis}\n

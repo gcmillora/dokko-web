@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 async function getData(doctorid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
@@ -83,6 +83,8 @@ export default async function Page({ params }: pageProps) {
         appointment.attributes.patient.data.attributes.fullName,
         appointment.attributes.patient.data.attributes.uid,
         appointment.attributes.patient.data.id,
+        appointment.attributes.doctor.data.attributes.uid,
+        appointment.attributes.doctor.data.attributes.meeting_token,
       ],
       generalPurpose: appointment.attributes.generalPurpose,
       doctor: [
@@ -109,7 +111,7 @@ export default async function Page({ params }: pageProps) {
       uid: appointment.attributes.uid,
     };
   });
-
+  const id = appointments[0]?.doctor[2];
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -120,7 +122,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.doctor_id, type: "doctor" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav />
+              <UserNav id={id} type={"doctor"} />
             </div>
           </div>
         </div>

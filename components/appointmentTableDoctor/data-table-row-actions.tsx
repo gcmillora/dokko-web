@@ -10,6 +10,7 @@ import {
   Star,
   Tags,
   Trash,
+  Video,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,7 @@ import { X } from "lucide-react";
 import { updateOneAppointment } from "@/query/updateOneAppointment";
 import { useToast } from "../ui/use-toast";
 import { updateOneAppointmentById } from "@/query/updateOneAppointment copy";
+import { createPatientMeetingToken } from "@/query/video-chat/createPatientMeetingToken";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -60,9 +62,15 @@ export function DataTableRowActions<TData>({
   const [type, setType] = useState("");
   const date: [any] = row.getValue("date");
   const patient: [any] = row.getValue("patient");
-  const id: [any] = row.getValue("id");
 
-  const processAppointment = async (id: string, status: boolean) => {
+  const appId: [any] = row.getValue("id");
+  const virtual = row.getValue("type") === "Virtual" ? true : false;
+
+  const processAppointment = async (
+    id: string,
+    status: boolean,
+    virtual: boolean
+  ) => {
     const jwtToken = localStorage.getItem("jwtToken") || "";
     const response = await updateOneAppointmentById(id, jwtToken, status);
     if (response.error) {
@@ -80,8 +88,19 @@ export function DataTableRowActions<TData>({
         `,
       });
     }
+    if (virtual === true) {
+      console.log("doctor", patient.at(3));
+      console.log("appointment", appId[0]);
+      console.log("date", date[0]);
+
+      createPatientMeetingToken(patient.at(3), appId[0], date[0]);
+    }
     return response;
   };
+
+  function goToVirtualRoom() {
+    window.open(`https://dokko.daily.co/${patient.at(3)}?t=${patient.at(4)}`);
+  }
 
   return (
     <Dialog>
@@ -108,14 +127,28 @@ export function DataTableRowActions<TData>({
               Edit
             </DropdownMenuItem>
           </DialogTrigger>
-          <DropdownMenuItem onClick={() => processAppointment(id[0], true)}>
+          <DropdownMenuItem
+            onClick={() => processAppointment(appId[0], true, virtual)}
+          >
             <Check className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Approve
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => processAppointment(id[0], false)}>
+          <DropdownMenuItem
+            onClick={() => processAppointment(appId[0], false, virtual)}
+          >
             <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Decline
           </DropdownMenuItem>
+          {virtual && (
+            <DropdownMenuItem
+              onClick={() => {
+                goToVirtualRoom();
+              }}
+            >
+              <Video className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              Virtual Room
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem>
             <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Delete
@@ -126,7 +159,7 @@ export function DataTableRowActions<TData>({
       {type === "open" && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{`Appointment ${id[0]}`}</DialogTitle>
+            <DialogTitle>{`Appointment ${appId[0]}`}</DialogTitle>
 
             <DialogDescription>
               View your appointment here. Click proceed when you are done.

@@ -99,6 +99,7 @@ export default async function DashboardPage({ params }: pageProps) {
         id: appointment.id,
         patient: appointment.attributes.patient.data.attributes.fullName,
         doctor: appointment.attributes.doctor.data.attributes.fullName,
+        patientID: appointment.attributes.patient.data.id,
         doctorLink:
           appointment?.attributes?.doctor?.data?.attributes?.profilepicture
             ?.data?.attributes?.url || doctorDefaultPhoto,
@@ -110,6 +111,8 @@ export default async function DashboardPage({ params }: pageProps) {
       };
     })
     .slice(0, 5);
+
+  const id = recentApps[0].patientID;
 
   let dataAppsPerMonth = [
     { name: "Jan", value: 0 },
@@ -179,7 +182,7 @@ export default async function DashboardPage({ params }: pageProps) {
               {...{ id: params.patient_id, type: "patient" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav />
+              <UserNav id={id} type={"patient"} />
             </div>
           </div>
         </div>

@@ -77,6 +77,7 @@ query ($uid: String!) {
             attributes {
               uid
               fullName
+              meeting_token
               profilepicture{
                 data{
                   attributes{

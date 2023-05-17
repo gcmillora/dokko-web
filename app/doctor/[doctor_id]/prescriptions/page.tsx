@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 async function getData(doctorid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
@@ -84,6 +84,7 @@ async function getAppointments(doctorid: string) {
 
 export default async function Page({ params }: pageProps) {
   const data = await getData(params.doctor_id);
+
   const fetchedAppointments = await getAppointments(params.doctor_id);
   const appointments = fetchedAppointments.data.appointments.data.map(
     (appointment: any) => {
@@ -136,6 +137,7 @@ export default async function Page({ params }: pageProps) {
     }
   );
 
+  const id = prescriptions[0]?.doctor[2];
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -146,7 +148,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.doctor_id, type: "doctor" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav />
+              <UserNav id={id} type={"doctor"} />
             </div>
           </div>
         </div>

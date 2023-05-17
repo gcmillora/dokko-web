@@ -5,6 +5,7 @@ import { Inter as FontSans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { StyleSwitcher } from "@/components/style-switcher";
+import { motion } from "framer-motion";
 
 const inter = Inter({ subsets: ["latin"] });
 
