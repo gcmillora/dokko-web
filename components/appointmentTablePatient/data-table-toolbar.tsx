@@ -82,7 +82,7 @@ export function DataTableToolbar<TData>({
     });
     setExcludedTimes(times);
     console.log(times);
-  }, [selectedDate]);
+  }, [selectedDate, data]);
 
   const onSubmit = async (formData: any) => {
     console.log("Form Data: ", formData);
