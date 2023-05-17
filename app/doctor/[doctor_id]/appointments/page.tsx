@@ -6,7 +6,6 @@ import { z } from "zod";
 import { UserNav } from "@/components/user-nav";
 import { columns } from "@/components/appointmentTableDoctor/columns";
 
-import { taskSchema } from "@/data/schema";
 import { MainNav } from "@/components/mainNav";
 import {
   findAllAppointments,

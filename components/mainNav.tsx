@@ -14,11 +14,6 @@ interface IMyComponentProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export function MainNav({ className, ...props }: IMyComponentProps) {
-  console.log("props", props);
-  useEffect(() => {
-    console.log("props", props);
-  }, []);
-
   return (
     <nav
       className={cn("flex items-center space-x-4 lg:space-x-6", className)}
