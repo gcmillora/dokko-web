@@ -1,6 +1,6 @@
 //find one doctor using graphql
 
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
 export const findOneDoctor = async (doctor_id: string) => {
   const client = new ApolloClient({
@@ -38,3 +38,26 @@ export const findOneDoctor = async (doctor_id: string) => {
   });
   return data;
 };
+
+export const QueryOneDoctor = `query ($uid: String!) {
+  doctors(filters: { uid: { eq: $uid } }) {
+    data {
+      id
+      attributes {
+        address
+        uid
+        fullName
+        email
+        meeting_token
+        profilepicture {
+          data {
+            id
+            attributes {
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+}`;

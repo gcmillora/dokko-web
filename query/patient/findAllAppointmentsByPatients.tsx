@@ -64,7 +64,6 @@ export const patientAppointmentsQuery = `query ($uid: String!) {
       attributes {
         uid
         patient {
-          
           data {
             id
             attributes {
@@ -86,6 +85,7 @@ export const patientAppointmentsQuery = `query ($uid: String!) {
             attributes {
               uid
               fullName
+              meeting_token
               profilepicture{
                 data{
                   attributes{
@@ -102,6 +102,7 @@ export const patientAppointmentsQuery = `query ($uid: String!) {
         generalPurpose
         condition
         notes
+        patient_tkn
       }
     }
   }

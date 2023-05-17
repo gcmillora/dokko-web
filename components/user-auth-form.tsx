@@ -72,6 +72,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   const onSubmit = (data: any) => {
     console.log(data);
+
     axios
       .post(`${process.env.NEXT_PUBLIC_BACKEND_STRAPI_RAW}/api/auth/local`, {
         identifier: data.email,
@@ -86,8 +87,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           router.push(`/patient/${patient.patients.data[0].attributes.uid}`);
         } else if (response.data.user.level === "doctor") {
           const doctor = await findOneDoctor(data.email);
-          localStorage.setItem("id", doctor.patients.data[0].id);
-
+          localStorage.setItem("id", doctor.doctors.data[0].id);
           localStorage.setItem("uid", doctor.doctors.data[0].attributes.uid);
           router.push(`/doctor/${doctor.doctors.data[0].attributes.uid}`);
         }

@@ -1,7 +1,15 @@
 "use client";
 
 import { Row } from "@tanstack/react-table";
-import { Copy, MoreHorizontal, Pen, Star, Tags, Trash } from "lucide-react";
+import {
+  Copy,
+  MoreHorizontal,
+  Pen,
+  Star,
+  Tags,
+  Trash,
+  Video,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -45,7 +53,11 @@ export function DataTableRowActions<TData>({
   const [type, setType] = useState("");
   const date: [any] = row.getValue("date");
   const doctor: [any] = row.getValue("doctor");
+  const virtual = row.getValue("type") === "Virtual" ? true : false;
 
+  function goToVirtualRoom() {
+    window.open(`https://dokko.daily.co/${doctor.at(1)}?t=${doctor.at(4)}`);
+  }
   return (
     <Dialog>
       <DropdownMenu>
@@ -71,6 +83,12 @@ export function DataTableRowActions<TData>({
               Edit
             </DropdownMenuItem>
           </DialogTrigger>
+          {virtual && (
+            <DropdownMenuItem onClick={() => goToVirtualRoom()}>
+              <Video className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              Virtual Room
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem>
             <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Delete

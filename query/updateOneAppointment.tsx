@@ -1,6 +1,6 @@
 //update an appointment using graphql
 
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
 export const updateOneAppointment = async (
   appointment_id: string,
@@ -82,3 +82,47 @@ export const updateOneAppointment = async (
 
   return data;
 };
+
+export const MutationUpdateAppointmentByID = `
+mutation (
+  $id: ID!
+  $status: Boolean!
+) {
+  updateAppointment(
+    id: $id
+    data: {
+      status: $status
+    }
+  ) {
+    data {
+      id
+      attributes {
+        uid
+        patient {
+          data {
+            id
+            attributes {
+              uid
+              fullName
+            }
+          }
+        }
+        doctor {
+          data {
+            attributes {
+              uid
+              fullName
+            }
+          }
+        }
+        appointmentDate
+        typeOfVisit
+        status
+        condition
+        generalPurpose
+        notes
+      }
+    }
+  }
+}
+`;

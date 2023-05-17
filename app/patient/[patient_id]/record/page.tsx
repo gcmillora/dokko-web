@@ -21,14 +21,18 @@ export const metadata: Metadata = {
   description: "Records",
 };
 export default async function RecordPage({ params }: pageProps) {
+  const id = params.patient_id;
   return (
     <>
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
-            <MainNav className="mx-6" {...{ id: params.patient_id }} />
+            <MainNav
+              className="mx-6"
+              {...{ id: params.patient_id, type: "patient" }}
+            />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav />
+              <UserNav id={id} type={"patient"} />
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ export function RecentAppointments({ data }: RecentAppointmentsProps) {
   return (
     <div className="space-y-8">
       {data.map((appointment: any) => (
-        <div className="flex items-center">
+        <div className="flex items-center" key={appointment.id}>
           <Avatar className="h-9 w-9">
             <AvatarImage src={appointment.doctorLink} alt="Avatar" />
             <AvatarFallback>OM</AvatarFallback>

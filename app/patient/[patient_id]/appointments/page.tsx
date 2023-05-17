@@ -98,6 +98,8 @@ export default async function Page({ params }: pageProps) {
         appointment.attributes.doctor.data.attributes.fullName,
         appointment.attributes.doctor.data.attributes.uid,
         appointment.attributes.doctor.data.id,
+        appointment.attributes.doctor.data.attributes.meeting_token,
+        appointment.attributes.patient.data.attributes.patient_tkn,
       ],
       date: [
         new Date(appointment.attributes.appointmentDate),
@@ -119,14 +121,19 @@ export default async function Page({ params }: pageProps) {
     };
   });
 
+  const id = appointments[0]?.patient[2];
+
   return (
     <>
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
-            <MainNav className="mx-6" {...{ id: params.patient_id }} />
+            <MainNav
+              className="mx-6"
+              {...{ id: params.patient_id, type: "patient" }}
+            />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav />
+              <UserNav id={id} type={"patient"} />
             </div>
           </div>
         </div>
