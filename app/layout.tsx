@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { StyleSwitcher } from "@/components/style-switcher";
 import { motion } from "framer-motion";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
+          <Analytics />
           <TailwindIndicator />
           <Toaster />
           <StyleSwitcher />
