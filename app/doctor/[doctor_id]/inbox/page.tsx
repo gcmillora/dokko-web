@@ -10,10 +10,15 @@ import {
 import { getConversations, getPatients, getDoctorData } from "../utils";
 import { UserNavPatient } from "@/components/patient-dashboard/user-nav";
 import { UserNav } from "@/components/user-nav";
+import { Metadata } from "next";
 
 interface pageProps {
   params: { doctor_id: string };
 }
+export const metadata: Metadata = {
+  title: "Inbox | Dokko",
+  description: "Inbox",
+};
 export default async function Page({ params }: pageProps) {
   const fetchedConversations = await getConversations(params.doctor_id);
   const conversations = fetchedConversations.data.conversations.data;

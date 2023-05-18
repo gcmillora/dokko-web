@@ -149,7 +149,11 @@ export function Inbox({ conversations, patients }: InboxProps) {
             <CardTitle>Inbox</CardTitle>
             {/* create button for create message */}
             <DialogTrigger asChild>
-              <Button className="bg-primary" onClick={() => setType("create")}>
+              <Button
+                className="ml-auto h-8 lg:flex"
+                onClick={() => setType("create")}
+                variant="outline"
+              >
                 <Plus height={16} width={16} />
                 Create
               </Button>
