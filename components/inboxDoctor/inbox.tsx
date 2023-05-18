@@ -38,13 +38,14 @@ import { doctorDefaultPhoto } from "@/utils/exports";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { updateConversationMessages } from "@/query/updateConversationMessages";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 interface InboxProps {
   conversations: [any];
-  doctors: [any];
+  patients: [any];
 }
 
-export function Inbox({ conversations, doctors }: InboxProps) {
+export function Inbox({ conversations, patients }: InboxProps) {
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
   const { toast } = useToast();
   const [type, setType] = useState("");
@@ -90,27 +91,27 @@ export function Inbox({ conversations, doctors }: InboxProps) {
   }
   async function onSubmit(formData: any) {
     const jwtToken = localStorage.getItem("jwtToken") || "";
-    const patientid = localStorage.getItem("id") || "";
-    const patientuid = localStorage.getItem("uid") || "";
+    const doctorID = localStorage.getItem("id") || "";
+    const doctorUID = localStorage.getItem("uid") || "";
 
-    const doctorName = doctors.find(
-      (doctor: any) => doctor.id === formData.doctor
+    const patientName = patients.find(
+      (patient: any) => patient.id === formData.patient
     ).attributes.fullName;
-    const doctorUID = doctors.find(
-      (doctor: any) => doctor.id === formData.doctor
+    const patientUID = patients.find(
+      (patient: any) => patient.id === formData.patient
     ).attributes.uid;
     const responseMessage = await insertOneMessage(
       formData.message,
-      " ",
-      doctorName,
-      patientuid,
+      "",
+      patientName,
       doctorUID,
+      patientUID,
       jwtToken
     );
     const responseConversation = await insertConversation(
       formData.subject,
-      patientid,
-      formData.doctor,
+      formData.patient,
+      doctorID,
       responseMessage.createMessage.data.id
     );
 
@@ -131,7 +132,7 @@ export function Inbox({ conversations, doctors }: InboxProps) {
   }
 
   console.log(conversations);
-  console.log("doctors", doctors);
+  console.log("doctors", patients);
 
   function handleSelectedConversation(conversationId: string) {
     const selected = conversations.find(
@@ -156,7 +157,7 @@ export function Inbox({ conversations, doctors }: InboxProps) {
           </CardHeader>
           <CardContent className="pl-6 overflow-y-auto grow">
             {/* make the div scrollable */}
-            <div className="flex flex-col  space-y-4 ">
+            <div className="flex flex-col   ">
               {conversations.map((conversation) => (
                 <div
                   className="flex flex-row items-center justify-between space-y-0 pt-6 pb-6 border-b border-t border-muted "
@@ -167,12 +168,12 @@ export function Inbox({ conversations, doctors }: InboxProps) {
                     <Avatar className="h-12 w-12">
                       <AvatarImage
                         src={
-                          conversation?.attributes?.doctor?.data?.attributes
+                          conversation?.attributes?.patient?.data?.attributes
                             ?.profilepicture?.data?.attributes?.url
                         }
                         alt="@dokko"
                       />
-                      <AvatarFallback>DC</AvatarFallback>
+                      <AvatarFallback>PA</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <div className="text-sm font-medium">
@@ -211,7 +212,7 @@ export function Inbox({ conversations, doctors }: InboxProps) {
                     <Avatar className="h-8 w-8">
                       <AvatarImage
                         src={
-                          selectedConversation?.attributes?.doctor?.data
+                          selectedConversation?.attributes?.patient?.data
                             ?.attributes?.profilepicture?.data?.attributes?.url
                         }
                         alt="@shadcn"
@@ -219,7 +220,7 @@ export function Inbox({ conversations, doctors }: InboxProps) {
                       <AvatarFallback>DC</AvatarFallback>
                     </Avatar>
                     {
-                      selectedConversation.attributes.doctor.data.attributes
+                      selectedConversation.attributes.patient.data.attributes
                         .fullName
                     }
                   </div>
@@ -314,20 +315,20 @@ export function Inbox({ conversations, doctors }: InboxProps) {
                   />
                 </div>
                 <div className="flex flex-row items-center gap-2 space-y-2">
-                  <Label htmlFor="doctor">To</Label>
+                  <Label htmlFor="patient">To</Label>
                   <Controller
                     control={control}
-                    name="doctor"
+                    name="patient"
                     rules={{ required: true }}
                     render={({ field }) => (
                       <Select onValueChange={field.onChange} {...field}>
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-[250px]">
                           <SelectValue placeholder="Select Doctor" />
                         </SelectTrigger>
                         <SelectContent>
-                          {doctors.map((doctor) => (
-                            <SelectItem key={doctor.id} value={doctor.id}>
-                              {doctor.attributes.fullName}
+                          {patients.map((patient) => (
+                            <SelectItem key={patient.id} value={patient.id}>
+                              {patient.attributes.fullName}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -356,7 +357,7 @@ export function Inbox({ conversations, doctors }: InboxProps) {
               <DialogTitle>
                 Reply to{" "}
                 {
-                  selectedConversation?.attributes?.doctor?.data?.attributes
+                  selectedConversation?.attributes?.patient?.data?.attributes
                     ?.fullName
                 }
               </DialogTitle>

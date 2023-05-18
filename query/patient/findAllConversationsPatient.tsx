@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
 export const findAllConversationsPatient = async (
   patient_id: string,
@@ -73,3 +73,61 @@ export const findAllConversationsPatient = async (
   });
   return data;
 };
+
+export const QueryConversationsPatient = `query ($uid: String!) {
+  conversations(
+    filters: { patient: { uid: { eq: $uid } } }
+    sort: "createdAt:desc"
+  ) {
+    data {
+      id
+      attributes {
+        doctor {
+          data {
+            id
+            attributes {
+              fullName
+              uid
+              profilepicture {
+                data {
+                  id
+                  attributes {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        patient {
+          data {
+            id
+            attributes {
+              uid
+              fullName
+            }
+          }
+        }
+        messages {
+          data {
+            id
+            attributes {
+              sender_name
+              recipient_name
+              payload
+              uid
+              createdAt
+            }
+          }
+        }
+        createdAt
+        subject
+      }
+    }
+    meta {
+      pagination {
+        total
+      }
+    }
+  }
+}`;
