@@ -28,6 +28,7 @@ import { Input } from "./ui/input";
 import { updateOneDoctor } from "@/query/updateOneDoctor";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
+import { ModeToggle } from "./mode-toggle";
 
 interface UserNavProps {
   id: string;
@@ -86,6 +87,7 @@ export function UserNav({ id, type }: UserNavProps) {
   };
   return (
     <Dialog>
+      <ModeToggle />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">

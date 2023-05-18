@@ -29,7 +29,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
-          <Analytics />
+          {/* <Analytics /> */}
           <TailwindIndicator />
           <Toaster />
           <StyleSwitcher />

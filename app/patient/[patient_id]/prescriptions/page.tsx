@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { z } from "zod";
 
-import { UserNav } from "@/components/user-nav";
+import { UserNavPatient } from "@/components/patient-dashboard/user-nav";
 
 import { MainNav } from "@/components/mainNav";
 import {
@@ -17,6 +17,7 @@ import { findAllDoctorQuery } from "@/query/findDoctors";
 import { patientPrescriptionsQuery } from "@/query/patient/findAllPrescriptionsByPatient";
 import { DataTable } from "@/components/prescriptionTablePatient/data-table";
 import { columns } from "@/components/prescriptionTablePatient/columns";
+import { getPatientData } from "../utils";
 
 // Simulate a database read for tasks.
 
@@ -56,6 +57,8 @@ async function getData(patientid: string) {
 
 export default async function Page({ params }: pageProps) {
   const data = await getData(params.patient_id);
+  const fetchedPatient = await getPatientData(params.patient_id);
+  const patient = fetchedPatient.data.patients.data;
 
   const prescriptions = data.data.prescriptions.data.map(
     (prescription: any) => {
@@ -93,7 +96,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.patient_id, type: "patient" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav id={id} type={"patient"} />
+              <UserNavPatient id={id} type={"patient"} patient={patient} />
             </div>
           </div>
         </div>

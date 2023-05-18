@@ -7,11 +7,13 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainNav } from "@/components/mainNav";
-import { UserNav } from "@/components/user-nav";
+
 import { BookmarkPlus, Files } from "lucide-react";
 import { BasicHealthRecord } from "@/components/patient-record/basic-health-record";
 import { MedicalRecordCard } from "@/components/patient-record/medical-record";
 import { Metadata } from "next/types";
+import { getPatientData } from "../utils";
+import { UserNavPatient } from "@/components/patient-dashboard/user-nav";
 
 interface pageProps {
   params: { patient_id: string };
@@ -22,6 +24,8 @@ export const metadata: Metadata = {
 };
 export default async function RecordPage({ params }: pageProps) {
   const id = params.patient_id;
+  const fetchedPatient = await getPatientData(params.patient_id);
+  const patient = fetchedPatient.data.patients.data;
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -32,7 +36,7 @@ export default async function RecordPage({ params }: pageProps) {
               {...{ id: params.patient_id, type: "patient" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav id={id} type={"patient"} />
+              <UserNavPatient id={id} type={"patient"} patient={patient} />
             </div>
           </div>
         </div>
