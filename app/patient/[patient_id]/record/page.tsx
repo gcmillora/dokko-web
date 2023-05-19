@@ -23,9 +23,11 @@ export const metadata: Metadata = {
   description: "Records",
 };
 export default async function RecordPage({ params }: pageProps) {
-  const id = params.patient_id;
+  const uid = params.patient_id;
   const fetchedPatient = await getPatientData(params.patient_id);
   const patient = fetchedPatient.data.patients.data;
+  const id = patient[0].id;
+
   return (
     <>
       <div className="hidden flex-col md:flex">

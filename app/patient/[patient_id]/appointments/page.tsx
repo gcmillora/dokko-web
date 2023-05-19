@@ -77,6 +77,7 @@ export default async function Page({ params }: pageProps) {
   const fetchedDoctors = await getDoctors();
   const fetchedPatient = await getPatientData(params.patient_id);
   const patient = fetchedPatient.data.patients.data;
+  const id = patient[0].id;
 
   const doctors = fetchedDoctors?.data?.doctors?.data?.map((doctor: any) => {
     return {
@@ -122,8 +123,6 @@ export default async function Page({ params }: pageProps) {
       uid: appointment.attributes.uid,
     };
   });
-
-  const id = appointments[0]?.patient[2];
 
   return (
     <>

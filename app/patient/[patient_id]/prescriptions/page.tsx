@@ -59,6 +59,7 @@ export default async function Page({ params }: pageProps) {
   const data = await getData(params.patient_id);
   const fetchedPatient = await getPatientData(params.patient_id);
   const patient = fetchedPatient.data.patients.data;
+  const id = patient[0].id;
 
   const prescriptions = data.data.prescriptions.data.map(
     (prescription: any) => {
@@ -85,7 +86,7 @@ export default async function Page({ params }: pageProps) {
       };
     }
   );
-  const id = prescriptions[0].patient[2];
+
   return (
     <>
       <div className="hidden flex-col md:flex">

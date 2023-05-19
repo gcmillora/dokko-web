@@ -92,6 +92,7 @@ export default async function DashboardPage({ params }: pageProps) {
   const fetchedPrescriptions = await getPrescriptions(params.patient_id);
   const fetchedPatient = await getPatientData(params.patient_id);
   const patient = fetchedPatient.data.patients.data;
+  const id = patient[0].id;
 
   const prescriptions = fetchedPrescriptions.data.prescriptions;
   const appointments = fetchedAppointments.data.appointments;
@@ -114,8 +115,6 @@ export default async function DashboardPage({ params }: pageProps) {
       };
     })
     .slice(0, 5);
-
-  const id = recentApps[0].patientID;
 
   let dataAppsPerMonth = [
     { name: "Jan", value: 0 },
@@ -174,7 +173,6 @@ export default async function DashboardPage({ params }: pageProps) {
     }
   });
 
-  console.log(recentApps[0].doctorLink);
   return (
     <>
       <div className="hidden flex-col md:flex">

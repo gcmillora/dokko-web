@@ -26,7 +26,7 @@ export default async function Page({ params }: pageProps) {
 
   const fetchedPatient = await getPatientData(params.patient_id);
   const patient = fetchedPatient.data.patients.data;
-  const id = patient.id;
+  const id = patient[0].id;
 
   return (
     <div className="hidden flex-col md:flex">
