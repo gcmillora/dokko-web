@@ -41,6 +41,8 @@ import { Input } from "../ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
 import { useForm } from "react-hook-form";
+import { updateOneAppointment } from "@/query/updateOneAppointment";
+import { useToast } from "../ui/use-toast";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -55,6 +57,8 @@ export function DataTableRowActions<TData>({
   const date: [any] = row.getValue("date");
   const doctor: [any] = row.getValue("doctor");
   const virtual = row.getValue("type") === "Virtual" ? true : false;
+  const id: [any] = row.getValue("id");
+  const { toast } = useToast();
 
   const {
     control,
@@ -63,7 +67,21 @@ export function DataTableRowActions<TData>({
     formState: { errors },
   } = useForm();
   async function onEdit(formData: any) {
-    console.log(formData);
+    const jwtToken = localStorage.getItem("jwtToken") || "";
+    const response = await updateOneAppointment(id[0], jwtToken, formData);
+    if (response.error) {
+      toast({
+        title: "Updating appointment failed.",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Appointment updated successfully.",
+        description: "Your appointment has been updated.",
+        variant: "constructive",
+      });
+    }
   }
 
   function goToVirtualRoom() {
@@ -183,7 +201,7 @@ export function DataTableRowActions<TData>({
               done.
             </DialogDescription>
           </DialogHeader>
-          <form>
+          <form onSubmit={handleSubmit(onEdit)}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
@@ -208,14 +226,14 @@ export function DataTableRowActions<TData>({
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="generalpurpose" className="text-right">
+                <Label htmlFor="generalPurpose" className="text-right">
                   General Purpose
                 </Label>
                 <Input
-                  id="generalpurpose"
+                  id="generalPurpose"
                   placeholder={row.getValue("generalPurpose")}
                   className="col-span-3"
-                  {...register("generalpurpose", { required: true })}
+                  {...register("generalPurpose", { required: true })}
                 />
               </div>
             </div>
