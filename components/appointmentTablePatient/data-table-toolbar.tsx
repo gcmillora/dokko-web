@@ -87,6 +87,7 @@ export function DataTableToolbar<TData>({
   const onSubmit = async (formData: any) => {
     console.log("Form Data: ", formData);
     const jwtToken = localStorage.getItem("jwtToken");
+    const id = localStorage.getItem("id") || "";
 
     const hours = formData.time.split(":")[0];
     const minutes = formData.time.split(":")[1];
@@ -97,7 +98,7 @@ export function DataTableToolbar<TData>({
     console.log(data[0]);
     const response = await insertOneAppointment(
       jwtToken as string,
-      data[0].patient[2],
+      id,
       formData.doctor,
       appDate,
       formData.type,
