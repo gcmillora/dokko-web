@@ -11,6 +11,7 @@ import { getConversations, getPatients, getDoctorData } from "../utils";
 import { UserNavPatient } from "@/components/patient-dashboard/user-nav";
 import { UserNav } from "@/components/user-nav";
 import { Metadata } from "next";
+import { DoctorUserNav } from "@/components/doctor-dashboard/user-nav";
 
 interface pageProps {
   params: { doctor_id: string };
@@ -38,7 +39,7 @@ export default async function Page({ params }: pageProps) {
             {...{ id: params.doctor_id, type: "doctor" }}
           />
           <div className="ml-auto flex items-center space-x-4">
-            <UserNav id={id} type={"doctor"} />
+            <DoctorUserNav id={id} type="doctor" doctor={doctor} />
           </div>
         </div>
       </div>
