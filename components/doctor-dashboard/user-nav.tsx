@@ -96,8 +96,7 @@ export function DoctorUserNav({ id, type, doctor }: DoctorUserNavProps) {
             <Avatar className="h-8 w-8">
               <AvatarImage
                 src={
-                  doctor[0]?.data?.attributes?.profilepicture?.data?.attributes
-                    ?.url
+                  doctor[0]?.attributes?.profilepicture?.data?.attributes?.url
                 }
                 alt="@shadcn"
               />

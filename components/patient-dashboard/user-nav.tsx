@@ -39,7 +39,7 @@ interface UserNavProps {
 
 export function UserNavPatient({ id, type, patient }: UserNavProps) {
   const router = useRouter();
-  console.log(patient);
+
   const [file, setFile] = useState<File>();
   const { toast } = useToast();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,8 +98,7 @@ export function UserNavPatient({ id, type, patient }: UserNavProps) {
             <Avatar className="h-8 w-8">
               <AvatarImage
                 src={
-                  patient[0]?.data?.attributes?.profilepicture?.data?.attributes
-                    ?.url
+                  patient[0]?.attributes?.profilepicture?.data?.attributes?.url
                 }
                 alt="@shadcn"
               />
