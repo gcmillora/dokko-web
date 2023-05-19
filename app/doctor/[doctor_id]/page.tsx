@@ -49,6 +49,7 @@ export default async function DashboardPage({ params }: pageProps) {
   const fetchedPrescriptions = await getPrescriptions(params.doctor_id);
   const fetchedDoctor = await getDoctorData(params.doctor_id);
   const doctor = fetchedDoctor.data.doctors.data;
+  const id = doctor[0].id;
 
   const prescriptions = fetchedPrescriptions.data.prescriptions;
   const appointments = fetchedAppointments.data.appointments;
@@ -141,7 +142,7 @@ export default async function DashboardPage({ params }: pageProps) {
               {...{ id: params.doctor_id, type: "doctor" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <DoctorUserNav data={doctor} />
+              <DoctorUserNav id={id} type="doctor" doctor={doctor} />
             </div>
           </div>
         </div>

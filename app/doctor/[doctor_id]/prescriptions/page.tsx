@@ -19,6 +19,8 @@ import { DataTable } from "@/components/prescriptionTableDoctor/data-table";
 import { columns } from "@/components/prescriptionTableDoctor/columns";
 import { QueryAllPrescriptionsDoctor } from "@/query/doctor/findAllPrescriptionsByDoctor";
 import { QueryAllAppointmentsDoctor } from "@/query/doctor/findAllAppointmentsByDoctor";
+import { DoctorUserNav } from "@/components/doctor-dashboard/user-nav";
+import { getDoctorData } from "../utils";
 
 // Simulate a database read for tasks.
 
@@ -83,6 +85,9 @@ async function getAppointments(doctorid: string) {
 
 export default async function Page({ params }: pageProps) {
   const data = await getData(params.doctor_id);
+  const fetchedDoctor = await getDoctorData(params.doctor_id);
+  const doctor = fetchedDoctor.data.doctors.data;
+  const id = doctor[0].id;
 
   const fetchedAppointments = await getAppointments(params.doctor_id);
   const appointments = fetchedAppointments.data.appointments.data.map(
@@ -136,7 +141,6 @@ export default async function Page({ params }: pageProps) {
     }
   );
 
-  const id = prescriptions[0]?.doctor[2];
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -147,7 +151,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.doctor_id, type: "doctor" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav id={id} type={"doctor"} />
+              <DoctorUserNav id={id} type="doctor" doctor={doctor} />
             </div>
           </div>
         </div>

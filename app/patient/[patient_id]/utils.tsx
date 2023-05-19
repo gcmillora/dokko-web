@@ -27,9 +27,6 @@ export async function getPatientData(patientid: string) {
 
 export async function getConversations(patientid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
-    next: {
-      revalidate: 20,
-    },
     method: "POST",
     headers: {
       "Content-Type": "application/json",

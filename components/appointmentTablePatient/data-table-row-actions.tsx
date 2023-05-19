@@ -40,6 +40,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
+import { useForm } from "react-hook-form";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -54,6 +55,16 @@ export function DataTableRowActions<TData>({
   const date: [any] = row.getValue("date");
   const doctor: [any] = row.getValue("doctor");
   const virtual = row.getValue("type") === "Virtual" ? true : false;
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  async function onEdit(formData: any) {
+    console.log(formData);
+  }
 
   function goToVirtualRoom() {
     window.open(`https://dokko.daily.co/${doctor.at(1)}?t=${doctor.at(4)}`);
@@ -180,8 +191,9 @@ export function DataTableRowActions<TData>({
                 </Label>
                 <Input
                   id="condition"
-                  value={row.getValue("condition")}
+                  placeholder={row.getValue("condition")}
                   className="col-span-3"
+                  {...register("condition", { required: true })}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -190,8 +202,9 @@ export function DataTableRowActions<TData>({
                 </Label>
                 <Input
                   id="notes"
-                  value={row.getValue("notes")}
+                  placeholder={row.getValue("notes")}
                   className="col-span-3"
+                  {...register("notes", { required: true })}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -200,8 +213,9 @@ export function DataTableRowActions<TData>({
                 </Label>
                 <Input
                   id="generalpurpose"
-                  value={row.getValue("generalPurpose")}
+                  placeholder={row.getValue("generalPurpose")}
                   className="col-span-3"
+                  {...register("generalpurpose", { required: true })}
                 />
               </div>
             </div>
