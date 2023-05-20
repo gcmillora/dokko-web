@@ -26,6 +26,22 @@ export function MainNav({ className, ...props }: IMyComponentProps) {
       >
         Overview
       </Link>
+      {props?.type === "admin" && (
+        <Link
+          href={`/${props?.type}/${props?.id}/patients`}
+          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          Patients
+        </Link>
+      )}
+      {props?.type === "admin" && (
+        <Link
+          href={`/${props?.type}/${props?.id}/doctors`}
+          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          Doctors
+        </Link>
+      )}
       <Link
         href={`/${props?.type}/${props?.id}/appointments`}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"

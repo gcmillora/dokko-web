@@ -15,8 +15,8 @@ import { gql } from "@apollo/client";
 
 import { findAllDoctorQuery } from "@/query/findDoctors";
 import { patientPrescriptionsQuery } from "@/query/patient/findAllPrescriptionsByPatient";
-import { DataTable } from "@/components/prescriptionTablePatient/data-table";
-import { columns } from "@/components/prescriptionTablePatient/columns";
+import { DataTable } from "@/components/doctor-prescription-table/data-table";
+import { columns } from "@/components/doctor-prescription-table/columns";
 import { getPatientData } from "../utils";
 
 // Simulate a database read for tasks.

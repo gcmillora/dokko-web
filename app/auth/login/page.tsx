@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Login",
+  title: "Login | Dokko",
   description: "Login to your account",
 };
 

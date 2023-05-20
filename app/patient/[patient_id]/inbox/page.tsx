@@ -1,4 +1,4 @@
-import { Inbox } from "@/components/inboxPatients/inbox";
+import { Inbox } from "@/components/patient-inbox/inbox";
 import { MainNav } from "@/components/mainNav";
 import {
   Card,

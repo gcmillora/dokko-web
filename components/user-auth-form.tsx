@@ -15,6 +15,33 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const router = useRouter();
   const { toast } = useToast();
+
+  const findOneUser = async (email: string) => {
+    const client = new ApolloClient({
+      uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
+      cache: new InMemoryCache(),
+    });
+    const { data } = await client.query({
+      variables: {
+        email: email,
+      },
+      query: gql`
+        query ($email: String!) {
+          usersPermissionsUsers(filters: { email: { eq: $email } }) {
+            data {
+              id
+              attributes {
+                uid
+                email
+              }
+            }
+          }
+        }
+      `,
+    });
+    return data;
+  };
+
   const findOneDoctor = async (email: string) => {
     const client = new ApolloClient({
       uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
@@ -90,10 +117,21 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           localStorage.setItem("id", doctor.doctors.data[0].id);
           localStorage.setItem("uid", doctor.doctors.data[0].attributes.uid);
           router.push(`/doctor/${doctor.doctors.data[0].attributes.uid}`);
+        } else if (response.data.user.level === "admin") {
+          console.log("admin");
+          const admin = await findOneUser(data.email);
+          localStorage.setItem("id", admin.usersPermissionsUsers.data[0].id);
+          localStorage.setItem(
+            "uid",
+            admin.usersPermissionsUsers.data[0].attributes.uid
+          );
+          router.push(
+            `/admin/${admin.usersPermissionsUsers.data[0].attributes.uid}`
+          );
         }
       })
       .catch((error) => {
-        console.log("error");
+        console.log("error", error);
         toast({
           variant: "destructive",
           title: "Sign-in failed",
@@ -160,7 +198,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             type="submit"
             className={cn(buttonVariants({}))}
             onClick={() => {
-              setIsGitHubLoading(true);
+              setIsLoading(true);
             }}
             disabled={isLoading}
           >

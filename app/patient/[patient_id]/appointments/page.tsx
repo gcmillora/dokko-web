@@ -4,7 +4,7 @@ import Image from "next/image";
 import { z } from "zod";
 
 import { UserNavPatient } from "@/components/patient-dashboard/user-nav";
-import { columns } from "@/components/appointmentTablePatient/columns";
+import { columns } from "@/components/patient-appointment-table/columns";
 
 import { MainNav } from "@/components/mainNav";
 import {
@@ -13,7 +13,7 @@ import {
 } from "@/query/patient/findAllAppointmentsByPatients";
 import { useEffect, useMemo, useState } from "react";
 import { gql } from "@apollo/client";
-import { DataTable } from "@/components/appointmentTablePatient/data-table";
+import { DataTable } from "@/components/patient-appointment-table/data-table";
 import { findAllDoctorQuery } from "@/query/findDoctors";
 import { getPatientData } from "../utils";
 

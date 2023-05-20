@@ -15,8 +15,8 @@ import { gql } from "@apollo/client";
 
 import { findAllDoctorQuery } from "@/query/findDoctors";
 import { patientPrescriptionsQuery } from "@/query/patient/findAllPrescriptionsByPatient";
-import { DataTable } from "@/components/prescriptionTableDoctor/data-table";
-import { columns } from "@/components/prescriptionTableDoctor/columns";
+import { DataTable } from "@/components/patient-prescription-table/data-table";
+import { columns } from "@/components/patient-prescription-table/columns";
 import { QueryAllPrescriptionsDoctor } from "@/query/doctor/findAllPrescriptionsByDoctor";
 import { QueryAllAppointmentsDoctor } from "@/query/doctor/findAllAppointmentsByDoctor";
 import { DoctorUserNav } from "@/components/doctor-dashboard/user-nav";
