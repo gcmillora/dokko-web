@@ -26,6 +26,22 @@ export function MainNav({ className, ...props }: IMyComponentProps) {
       >
         Overview
       </Link>
+      {props?.type === "admin" && (
+        <Link
+          href={`/${props?.type}/${props?.id}/patients`}
+          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          Patients
+        </Link>
+      )}
+      {props?.type === "admin" && (
+        <Link
+          href={`/${props?.type}/${props?.id}/doctors`}
+          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          Doctors
+        </Link>
+      )}
       <Link
         href={`/${props?.type}/${props?.id}/appointments`}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
@@ -39,12 +55,9 @@ export function MainNav({ className, ...props }: IMyComponentProps) {
         Prescriptions
       </Link>
       {props?.type === "doctor" && (
-        <Link
-          href={`/${props?.type}/${props?.id}/settings`}
-          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-        >
+        <span className="text-sm font-medium text-muted-foreground transition-colors ">
           Settings{" "}
-        </Link>
+        </span>
       )}
       {props?.type === "patient" && (
         <Link
@@ -59,10 +72,8 @@ export function MainNav({ className, ...props }: IMyComponentProps) {
         href={`/${props?.type}/${props?.id}/inbox`}
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary flex flex-row gap-2 items-center"
       >
-        <Inbox className="h-4 w-4 text-muted-foreground" />
         Inbox
       </Link>
-      <ModeToggle />
     </nav>
   );
 }

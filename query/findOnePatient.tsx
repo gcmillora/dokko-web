@@ -1,4 +1,4 @@
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
 //add error handling for graphql
 export const findOnePatient = async (patient_id: string) => {
@@ -47,3 +47,34 @@ export const findOnePatient = async (patient_id: string) => {
 
   return data;
 };
+
+export const QueryOnePatient = `query ($uid: String!) {
+  patients(filters: { uid: { eq: $uid } }) {
+    data {
+      id
+      attributes {
+        uid
+        fullName
+        email
+        address
+        phoneNumber
+        profilepicture {
+          data {
+            id
+            attributes {
+              url
+            }
+          }
+        }
+        medical_redicord {
+          data {
+            id
+            attributes {
+              uid
+            }
+          }
+        }
+      }
+    }
+  }
+}`;

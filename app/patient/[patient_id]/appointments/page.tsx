@@ -3,8 +3,8 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { z } from "zod";
 
-import { UserNav } from "@/components/user-nav";
-import { columns } from "@/components/appointmentTablePatient/columns";
+import { UserNavPatient } from "@/components/patient-dashboard/user-nav";
+import { columns } from "@/components/patient-appointment-table/columns";
 
 import { MainNav } from "@/components/mainNav";
 import {
@@ -13,8 +13,9 @@ import {
 } from "@/query/patient/findAllAppointmentsByPatients";
 import { useEffect, useMemo, useState } from "react";
 import { gql } from "@apollo/client";
-import { DataTable } from "@/components/appointmentTablePatient/data-table";
+import { DataTable } from "@/components/patient-appointment-table/data-table";
 import { findAllDoctorQuery } from "@/query/findDoctors";
+import { getPatientData } from "../utils";
 
 // Simulate a database read for tasks.
 
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
 async function getData(patientid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
@@ -54,7 +55,7 @@ async function getData(patientid: string) {
 async function getDoctors() {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
@@ -74,6 +75,9 @@ async function getDoctors() {
 export default async function Page({ params }: pageProps) {
   const data = await getData(params.patient_id);
   const fetchedDoctors = await getDoctors();
+  const fetchedPatient = await getPatientData(params.patient_id);
+  const patient = fetchedPatient.data.patients.data;
+  const id = patient[0].id;
 
   const doctors = fetchedDoctors?.data?.doctors?.data?.map((doctor: any) => {
     return {
@@ -120,8 +124,6 @@ export default async function Page({ params }: pageProps) {
     };
   });
 
-  const id = appointments[0]?.patient[2];
-
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -132,7 +134,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.patient_id, type: "patient" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav id={id} type={"patient"} />
+              <UserNavPatient id={id} type={"patient"} patient={patient} />
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { z } from "zod";
 
-import { UserNav } from "@/components/user-nav";
+import { UserNavPatient } from "@/components/patient-dashboard/user-nav";
 
 import { MainNav } from "@/components/mainNav";
 import {
@@ -15,8 +15,9 @@ import { gql } from "@apollo/client";
 
 import { findAllDoctorQuery } from "@/query/findDoctors";
 import { patientPrescriptionsQuery } from "@/query/patient/findAllPrescriptionsByPatient";
-import { DataTable } from "@/components/prescriptionTablePatient/data-table";
-import { columns } from "@/components/prescriptionTablePatient/columns";
+import { DataTable } from "@/components/doctor-prescription-table/data-table";
+import { columns } from "@/components/doctor-prescription-table/columns";
+import { getPatientData } from "../utils";
 
 // Simulate a database read for tasks.
 
@@ -56,6 +57,9 @@ async function getData(patientid: string) {
 
 export default async function Page({ params }: pageProps) {
   const data = await getData(params.patient_id);
+  const fetchedPatient = await getPatientData(params.patient_id);
+  const patient = fetchedPatient.data.patients.data;
+  const id = patient[0].id;
 
   const prescriptions = data.data.prescriptions.data.map(
     (prescription: any) => {
@@ -82,7 +86,7 @@ export default async function Page({ params }: pageProps) {
       };
     }
   );
-  const id = prescriptions[0].patient[2];
+
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -93,7 +97,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.patient_id, type: "patient" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav id={id} type={"patient"} />
+              <UserNavPatient id={id} type={"patient"} patient={patient} />
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { z } from "zod";
 
 import { UserNav } from "@/components/user-nav";
-import { columns } from "@/components/appointmentTableDoctor/columns";
+import { columns } from "@/components/doctor-appointments-table/columns";
 
 import { MainNav } from "@/components/mainNav";
 import {
@@ -13,9 +13,11 @@ import {
 } from "@/query/patient/findAllAppointmentsByPatients";
 import { useEffect, useMemo, useState } from "react";
 import { gql } from "@apollo/client";
-import { DataTable } from "@/components/appointmentTableDoctor/data-table";
+import { DataTable } from "@/components/doctor-appointments-table/data-table";
 import { findAllDoctorQuery } from "@/query/findDoctors";
 import { QueryAllAppointmentsDoctor } from "@/query/doctor/findAllAppointmentsByDoctor";
+import { DoctorUserNav } from "@/components/doctor-dashboard/user-nav";
+import { getDoctorData } from "../utils";
 
 // Simulate a database read for tasks.
 
@@ -110,7 +112,9 @@ export default async function Page({ params }: pageProps) {
       uid: appointment.attributes.uid,
     };
   });
-  const id = appointments[0]?.doctor[2];
+  const fetchedDoctor = await getDoctorData(params.doctor_id);
+  const doctor = fetchedDoctor.data.doctors.data;
+  const id = doctor[0].id;
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -121,7 +125,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.doctor_id, type: "doctor" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav id={id} type={"doctor"} />
+              <DoctorUserNav id={id} type="doctor" doctor={doctor} />
             </div>
           </div>
         </div>

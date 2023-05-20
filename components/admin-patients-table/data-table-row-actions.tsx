@@ -2,6 +2,8 @@
 
 import { Row } from "@tanstack/react-table";
 import {
+  BookOpen,
+  Check,
   Copy,
   MoreHorizontal,
   Pen,
@@ -40,6 +42,12 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
+import { X } from "lucide-react";
+import { updateOneAppointment } from "@/query/updateOneAppointment";
+import { useToast } from "../ui/use-toast";
+import { updateOneAppointmentById } from "@/query/updateOneAppointment copy";
+import { createPatientMeetingToken } from "@/query/video-chat/createPatientMeetingToken";
+import { Textarea } from "../ui/textarea";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -50,14 +58,15 @@ export function DataTableRowActions<TData>({
   row,
   data,
 }: DataTableRowActionsProps<TData>) {
-  const [type, setType] = useState("");
-  const date: [any] = row.getValue("date");
-  const doctor: [any] = row.getValue("doctor");
-  const virtual = row.getValue("type") === "Virtual" ? true : false;
+  const { toast } = useToast();
+  const fullName: string = row.getValue("fullName") || "";
+  const pId: [any] = row.getValue("id");
+  const phoneNumber: string = row.getValue("phoneNumber") || "";
+  const email: string = row.getValue("email") || "";
+  const address: string = row.getValue("address") || "";
 
-  function goToVirtualRoom() {
-    window.open(`https://dokko.daily.co/${doctor.at(1)}?t=${doctor.at(4)}`);
-  }
+  const [type, setType] = useState("");
+
   return (
     <Dialog>
       <DropdownMenu>
@@ -73,26 +82,20 @@ export function DataTableRowActions<TData>({
         <DropdownMenuContent align="end" className="w-[160px]">
           <DialogTrigger asChild>
             <DropdownMenuItem onClick={() => setType("open")}>
-              <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              <BookOpen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
               Open
             </DropdownMenuItem>
           </DialogTrigger>
           <DialogTrigger asChild>
-            <DropdownMenuItem onClick={() => setType("edit")}>
+            <DropdownMenuItem onClick={() => setType("edit")} disabled>
               <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
               Edit
             </DropdownMenuItem>
           </DialogTrigger>
-          {virtual && (
-            <DropdownMenuItem onClick={() => goToVirtualRoom()}>
-              <Video className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-              Virtual Room
-            </DropdownMenuItem>
-          )}
+
           <DropdownMenuItem>
             <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Delete
-            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -100,55 +103,54 @@ export function DataTableRowActions<TData>({
       {type === "open" && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{`Appointment ${row.getUniqueValues(
-              "id"
-            )}`}</DialogTitle>
+            <DialogTitle>{`Patient ${pId[0]}`}</DialogTitle>
+
             <DialogDescription>
-              View your appointment here. Click proceed when you are done.
+              View patient information here. Click proceed when you are done.
             </DialogDescription>
           </DialogHeader>
           <form>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Doctor Name
+                <Label htmlFor="fullName" className="text-right">
+                  Full Name
                 </Label>
                 <Input
-                  id="doctor"
-                  value={doctor[0]}
+                  id="fullName"
+                  value={fullName}
                   className="col-span-3"
                   disabled
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="notes" className="text-right">
-                  Date
+                <Label htmlFor="email" className="text-right">
+                  E-mail
                 </Label>
                 <Input
                   id="date"
-                  value={new Date(date[0]).toLocaleString()}
+                  value={email}
                   disabled
                   className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
-                  Type
+                <Label htmlFor="phoneNumber" className="text-right">
+                  Phone
                 </Label>
                 <Input
-                  id="type"
-                  value={row.getValue("type")}
+                  id="phoneNumber"
+                  value={phoneNumber}
                   className="col-span-3"
                   disabled
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
-                  Condition
+                <Label htmlFor="address" className="text-right">
+                  Address
                 </Label>
-                <Input
-                  id="condition"
-                  value={row.getValue("condition")}
+                <Textarea
+                  id="address"
+                  value={address}
                   className="col-span-3"
                   disabled
                 />
@@ -162,7 +164,7 @@ export function DataTableRowActions<TData>({
           </form>
         </DialogContent>
       )}
-
+      {/* 
       {type === "edit" && (
         <DialogContent>
           <DialogHeader>
@@ -210,7 +212,7 @@ export function DataTableRowActions<TData>({
             </DialogFooter>
           </form>
         </DialogContent>
-      )}
+      )}  */}
     </Dialog>
   );
 }

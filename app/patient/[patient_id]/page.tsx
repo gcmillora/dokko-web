@@ -20,12 +20,13 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MainNav } from "@/components/mainNav";
-import { UserNav } from "@/components/user-nav";
 import { patientAppointmentsQuery } from "@/query/patient/findAllAppointmentsByPatients";
 import { RecentAppointments } from "@/components/patient-dashboard/recent-apps";
 import { Overview } from "@/components/overview";
 import { doctorDefaultPhoto } from "@/utils/exports";
 import { patientPrescriptionsQuery } from "@/query/patient/findAllPrescriptionsByPatient";
+import { UserNavPatient } from "@/components/patient-dashboard/user-nav";
+import { getPatientData } from "./utils";
 
 export const metadata: Metadata = {
   title: "Dashboard | Dokko",
@@ -89,6 +90,9 @@ async function getPrescriptions(patientid: string) {
 export default async function DashboardPage({ params }: pageProps) {
   const fetchedAppointments = await getData(params.patient_id);
   const fetchedPrescriptions = await getPrescriptions(params.patient_id);
+  const fetchedPatient = await getPatientData(params.patient_id);
+  const patient = fetchedPatient.data.patients.data;
+  const id = patient[0].id;
 
   const prescriptions = fetchedPrescriptions.data.prescriptions;
   const appointments = fetchedAppointments.data.appointments;
@@ -111,8 +115,6 @@ export default async function DashboardPage({ params }: pageProps) {
       };
     })
     .slice(0, 5);
-
-  const id = recentApps[0].patientID;
 
   let dataAppsPerMonth = [
     { name: "Jan", value: 0 },
@@ -171,7 +173,6 @@ export default async function DashboardPage({ params }: pageProps) {
     }
   });
 
-  console.log(recentApps[0].doctorLink);
   return (
     <>
       <div className="hidden flex-col md:flex">
@@ -182,7 +183,7 @@ export default async function DashboardPage({ params }: pageProps) {
               {...{ id: params.patient_id, type: "patient" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <UserNav id={id} type={"patient"} />
+              <UserNavPatient id={id} type={"patient"} patient={patient} />
             </div>
           </div>
         </div>

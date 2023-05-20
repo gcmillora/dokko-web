@@ -8,6 +8,7 @@ import {
   Users,
   BookmarkPlus,
   Files,
+  Video,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ import { QueryAllPrescriptionsDoctor } from "@/query/doctor/findAllPrescriptions
 import { QueryOneDoctor } from "@/query/findOneDoctor";
 import { getAppointments, getDoctorData, getPrescriptions } from "./utils";
 import { DoctorUserNav } from "@/components/doctor-dashboard/user-nav";
+import { VirtualRoom } from "@/components/doctor-dashboard/virtual-room";
 
 export const metadata: Metadata = {
   title: "Dashboard | Dokko",
@@ -47,6 +49,7 @@ export default async function DashboardPage({ params }: pageProps) {
   const fetchedPrescriptions = await getPrescriptions(params.doctor_id);
   const fetchedDoctor = await getDoctorData(params.doctor_id);
   const doctor = fetchedDoctor.data.doctors.data;
+  const id = doctor[0].id;
 
   const prescriptions = fetchedPrescriptions.data.prescriptions;
   const appointments = fetchedAppointments.data.appointments;
@@ -139,13 +142,17 @@ export default async function DashboardPage({ params }: pageProps) {
               {...{ id: params.doctor_id, type: "doctor" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              <DoctorUserNav data={doctor} />
+              <DoctorUserNav id={id} type="doctor" doctor={doctor} />
             </div>
           </div>
         </div>
+
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+            <div className="flex items-center space-x-2">
+              <VirtualRoom doctor={doctor} />
+            </div>
           </div>
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsList>

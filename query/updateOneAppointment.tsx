@@ -18,32 +18,23 @@ export const updateOneAppointment = async (
   const { data } = await client.mutate({
     variables: {
       id: appointment_id,
-      status: appointment.status,
       condition: appointment.condition,
       generalPurpose: appointment.generalPurpose,
       notes: appointment.notes,
-      typeOfVisit: appointment.typeOfVisit,
-      active: appointment.active,
     },
     mutation: gql`
       mutation (
         $id: ID!
-        $active: Boolean!
-        $condition: String!
-        $generalPurpose: String!
-        $notes: String!
-        $typeOfVisit: String!
-        $status: Boolean!
+        $condition: String
+        $generalPurpose: String
+        $notes: String
       ) {
         updateAppointment(
           id: $id
           data: {
-            status: $status
             condition: $condition
             generalPurpose: $generalPurpose
             notes: $notes
-            typeOfVisit: $typeOfVisit
-            active: $active
           }
         ) {
           data {

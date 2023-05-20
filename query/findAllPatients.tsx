@@ -1,4 +1,4 @@
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
 //using graphql
 export const findAllPatients = async (jwtToken: string) => {
@@ -29,3 +29,15 @@ export const findAllPatients = async (jwtToken: string) => {
 
   return data;
 };
+
+export const QueryAllPatients = `query {
+  patients{
+    data {
+      id
+      attributes {
+        uid
+        fullName
+      }
+    }
+  }
+}`;
