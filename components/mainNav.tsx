@@ -68,12 +68,14 @@ export function MainNav({ className, ...props }: IMyComponentProps) {
         </Link>
       )}
 
-      <Link
-        href={`/${props?.type}/${props?.id}/inbox`}
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary flex flex-row gap-2 items-center"
-      >
-        Inbox
-      </Link>
+      {props?.type != "admin" && (
+        <Link
+          href={`/${props?.type}/${props?.id}/inbox`}
+          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary flex flex-row gap-2 items-center"
+        >
+          Inbox
+        </Link>
+      )}
     </nav>
   );
 }

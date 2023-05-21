@@ -1,13 +1,17 @@
-"use client";
-
 import { MainNav } from "@/components/mainNav";
 import { getAllAppointments, getAllDoctors, getAllPatients } from "../../utils";
 import { DataTable } from "@/components/admin-appointments-table/data-table";
 import { columns } from "@/components/admin-appointments-table/columns";
+import { Metadata } from "next";
 
 interface pageProps {
   params: { admin_id: string };
 }
+
+export const metadata: Metadata = {
+  title: "Dokko | Appointments",
+  description: "Appointments",
+};
 
 export default async function Page({ params }: pageProps) {
   const fetchedAppointments = await getAllAppointments();
@@ -65,9 +69,9 @@ export default async function Page({ params }: pageProps) {
         </div>
         <div className="flex items-center justify-between space-y-2 p-8 pt-6">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Doctors</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Appointments</h2>
             <p className="text-muted-foreground">
-              Here&apos;s a list of all the doctors.
+              Here&apos;s a list of all the appointments.
             </p>
           </div>
         </div>

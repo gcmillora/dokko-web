@@ -1,5 +1,3 @@
-"use client";
-
 import { MainNav } from "@/components/mainNav";
 import {
   getAllAppointments,
@@ -9,11 +7,16 @@ import {
 } from "../../utils";
 import { DataTable } from "@/components/admin-prescriptions-table/data-table";
 import { columns } from "@/components/admin-prescriptions-table/columns";
+import { Metadata } from "next";
 
 interface pageProps {
   params: { admin_id: string };
 }
 
+export const metadata: Metadata = {
+  title: "Prescriptions | Dokko",
+  description: "Prescriptions",
+};
 export default async function Page({ params }: pageProps) {
   const fetchedPrescriptions = await getAllPrescriptions();
   const fetchedAppointments = await getAllAppointments();
@@ -85,9 +88,9 @@ export default async function Page({ params }: pageProps) {
         </div>
         <div className="flex items-center justify-between space-y-2 p-8 pt-6">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Doctors</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Prescriptions</h2>
             <p className="text-muted-foreground">
-              Here&apos;s a list of all the doctors.
+              Here&apos;s a list of all the prescriptions.
             </p>
           </div>
         </div>
