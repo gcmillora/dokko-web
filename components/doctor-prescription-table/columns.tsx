@@ -9,6 +9,11 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import Link from "next/link";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -54,12 +59,12 @@ export const columns: ColumnDef<any>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "doctor",
+    accessorKey: "patient",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Doctor" />
+      <DataTableColumnHeader column={column} title="Patient" />
     ),
     cell: ({ row }) => {
-      const data: [any] = row.getValue("doctor");
+      const data: [any] = row.getValue("patient");
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">{data[0]}</span>
@@ -77,7 +82,21 @@ export const columns: ColumnDef<any>[] = [
       const data: [any] = row.getValue("diagnosis");
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">{data[0]}</span>
+          <HoverCard>
+            <HoverCardTrigger className="max-w-[500px] truncate font-medium">
+              {data[0]}
+            </HoverCardTrigger>
+            <HoverCardContent className="flex flex-col gap-2">
+              <div className="flex flex-row gap-2">
+                <span className="font-medium">Diagnosis:</span>
+                <span className="text-sm">{data[0]}</span>
+              </div>
+              <div className="flex flex-row gap-2">
+                <span className="font-medium">Prescription:</span>
+                <span className="text-sm">{data.at(1)}</span>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         </div>
       );
     },

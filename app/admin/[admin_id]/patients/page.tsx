@@ -1,14 +1,17 @@
-"use client";
-
 import { DataTable } from "@/components/admin-patients-table/data-table";
 import { MainNav } from "@/components/mainNav";
 import { getAllPatients } from "../../utils";
 import { columns } from "@/components/admin-patients-table/columns";
+import { Metadata } from "next";
 
 interface pageProps {
   params: { admin_id: string };
 }
 
+export const metadata: Metadata = {
+  title: "Patients | Dokko",
+  description: "Doctors",
+};
 export default async function Page({ params }: pageProps) {
   console.log(params.admin_id);
   const fetchedPatients = await getAllPatients();

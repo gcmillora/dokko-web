@@ -51,9 +51,8 @@ export function DataTableRowActions<TData>({
   data,
 }: DataTableRowActionsProps<TData>) {
   const [type, setType] = useState("");
-  const id: [any] = row.getValue("id");
   const diag_pres: [any] = row.getValue("diagnosis");
-  const patient: [any] = row.getValue("patient");
+  const doctor: [any] = row.getValue("doctor");
 
   return (
     <Dialog>
@@ -85,7 +84,9 @@ export function DataTableRowActions<TData>({
       {type === "open" && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{`Prescription ${id[0]}`}</DialogTitle>
+            <DialogTitle>{`Prescription ${row.getUniqueValues(
+              "id"
+            )}`}</DialogTitle>
             <DialogDescription>
               View your prescription here. Click proceed when you are done.
             </DialogDescription>
@@ -94,11 +95,11 @@ export function DataTableRowActions<TData>({
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Patient Name
+                  Doctor Name
                 </Label>
                 <Input
-                  id="patient"
-                  value={patient[0]}
+                  id="doctor"
+                  value={doctor[0]}
                   className="col-span-3"
                   disabled
                 />

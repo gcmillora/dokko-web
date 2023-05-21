@@ -9,6 +9,9 @@ import { DeletePatientData, DeleteUserData } from "@/query/admin/mutation_func";
 
 export async function getAllAppointments() {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
+    next: {
+      revalidate: 10,
+    },
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -26,6 +29,9 @@ export async function getAllAppointments() {
 
 export async function getAllPrescriptions() {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
+    next: {
+      revalidate: 10,
+    },
     method: "POST",
     headers: {
       "Content-Type": "application/json",
