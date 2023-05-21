@@ -169,7 +169,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
               })}
             />
-            {errors?.email && <p className="px-1 text-xs text-red-600">sadf</p>}
+            {errors?.email && (
+              <p className="px-1 text-xs text-red-600">Required*</p>
+            )}
           </div>
         </div>
         <div className="grid gap-2 mt-2">
@@ -191,7 +193,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               })}
             />
             {errors?.password && (
-              <p className="px-1 text-xs text-red-600">sadf</p>
+              <p className="px-1 text-xs text-red-600">Required*</p>
             )}
           </div>
           <button
