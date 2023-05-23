@@ -224,9 +224,6 @@ export function DataTableToolbar<TData>({
           title: "Doctor created successfully",
           description: "Browser will reload in 5 seconds.",
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 6000);
       })
       .catch((error) => {
         toast({
