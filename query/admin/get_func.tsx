@@ -96,20 +96,20 @@ query {
 
 export const QueryAllDoctors = `
 query {
-    doctors {
-        data {
-            id
-            attributes {
-                uid
-                fullName
-                specialty
-                email
-                address
-                medicalId
-                }
-            }
-        }
-    }
+  doctors {
+      data {
+          id
+          attributes {
+              uid
+              fullName
+              specialty
+              email
+              address
+              medicalId
+              }
+          }
+      }
+  }
 `;
 
 export const QueryAllPatients = `

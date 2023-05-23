@@ -75,12 +75,15 @@ export function DataTableToolbar<TData>({
     const patientid = appointments.find(
       (appointment: any) => appointment.id[0] === formData.appointment
     ).patient[2];
+    const doctorid = appointments.find(
+      (appointment: any) => appointment.id[0] === formData.appointment
+    ).doctor[2];
     console.log("patientid", patientid);
     const jwtToken = localStorage.getItem("jwtToken") || "";
     const response = await insertOnePrescription(
       jwtToken,
       patientid,
-      appointments[0].doctor[2],
+      doctorid,
       formData.prescription,
       true,
       formData.appointment,
@@ -160,7 +163,7 @@ export function DataTableToolbar<TData>({
                         <SelectContent>
                           {appointments.map((appointment: any) => (
                             <SelectItem
-                              key={appointment.id}
+                              key={appointment.id[0]}
                               value={appointment.id[0]}
                             >
                               {`${appointment.id[0]}`}

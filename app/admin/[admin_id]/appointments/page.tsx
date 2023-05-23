@@ -15,6 +15,26 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: pageProps) {
   const fetchedAppointments = await getAllAppointments();
+  const fetchedDoctors = await getAllDoctors();
+  const fetchedPatients = await getAllPatients();
+
+  const patients = fetchedPatients.data.patients.data.map((patient: any) => {
+    return {
+      id: patient.id,
+      fullName: patient.attributes.fullName,
+      uid: patient.attributes.uid,
+    };
+  });
+
+  const doctors = fetchedDoctors.data.doctors.data.map((doctor: any) => {
+    return {
+      id: doctor.id,
+      fullName: doctor.attributes.fullName,
+      uid: doctor.attributes.uid,
+      specialty: doctor.attributes.specialty,
+    };
+  });
+
   const appointments = fetchedAppointments.data.appointments.data.map(
     (appointment: any) => {
       return {
@@ -76,7 +96,12 @@ export default async function Page({ params }: pageProps) {
           </div>
         </div>
         <div className="p-8 pt-2">
-          <DataTable data={appointments} columns={columns} />
+          <DataTable
+            data={appointments}
+            columns={columns}
+            doctors={doctors}
+            patients={patients}
+          />
         </div>
       </div>
     </>

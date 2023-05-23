@@ -74,6 +74,12 @@ export function DataTableRowActions<TData>({
               Open
             </DropdownMenuItem>
           </DialogTrigger>
+          <DialogTrigger asChild>
+            <DropdownMenuItem onClick={() => setType("edit")}>
+              <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              Edit
+            </DropdownMenuItem>
+          </DialogTrigger>
           <DropdownMenuItem>
             <Download className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Download
@@ -146,55 +152,71 @@ export function DataTableRowActions<TData>({
           </form>
         </DialogContent>
       )}
-
+      {/* 
       {type === "edit" && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Appointment</DialogTitle>
+            <DialogTitle>{`Prescription ${id[0]}`}</DialogTitle>
             <DialogDescription>
-              Make changes to your appoitment here. Click save when you are
-              done.
+              View your prescription here. Click proceed when you are done.
             </DialogDescription>
           </DialogHeader>
           <form>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Condition
+                  Patient Name
                 </Label>
                 <Input
-                  id="condition"
-                  value={row.getValue("condition")}
+                  id="patient"
+                  placeholder={patient[0] || "Patient Name"}
                   className="col-span-3"
+                  disabled
+                />
+              </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="type" className="text-right">
+                  Diagnosis
+                </Label>
+                <Input
+                  id="type"
+                  placeholder={diag_pres[0] || "Diagnosis"}
+                  className="col-span-3"
+                  disabled
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="notes" className="text-right">
+                <Label htmlFor="type" className="text-right">
+                  Prescription
+                </Label>
+                <Input
+                  id="type"
+                  placeholder={diag_pres.at(1) || "Prescription"}
+                  className="col-span-3"
+                  disabled
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="type" className="text-right">
                   Notes
                 </Label>
                 <Input
-                  id="notes"
-                  value={row.getValue("notes")}
+                  id="type"
+                  placeholder={diag_pres.at(2) || "Notes"}
                   className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="generalpurpose" className="text-right">
-                  General Purpose
-                </Label>
-                <Input
-                  id="generalpurpose"
-                  value={row.getValue("generalPurpose")}
-                  className="col-span-3"
+                  disabled
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save Changes</Button>
+              <DialogClose>
+                <Button>Confirm</Button>
+              </DialogClose>
             </DialogFooter>
           </form>
         </DialogContent>
-      )}
+      )} */}
     </Dialog>
   );
 }
