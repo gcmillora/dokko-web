@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 import { useState } from "react";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import axios from "axios";
@@ -15,6 +15,13 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { buttonVariants } from "../ui/button";
 import { Icons } from "../icons";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 interface UserRegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function UserRegisterForm({
@@ -25,6 +32,32 @@ export function UserRegisterForm({
   const router = useRouter();
   const { toast } = useToast();
   const [token, setToken] = useState("");
+  const specialty = [
+    {
+      id: 1,
+      value: "Allergists/Immunologists",
+    },
+    {
+      id: 2,
+      value: "Dentist",
+    },
+    {
+      id: 3,
+      value: "Optometrist",
+    },
+    {
+      id: 4,
+      value: "Pediatrician",
+    },
+    {
+      id: 5,
+      value: "Psychiatrist",
+    },
+    {
+      id: 6,
+      value: "General Practitioner",
+    },
+  ];
 
   const roomProperties = {
     name: uid,
@@ -39,7 +72,8 @@ export function UserRegisterForm({
     userName: string,
     email: string,
     uid: string,
-    fullName: string
+    fullName: string,
+    specialty: string
   ) => {
     console.log("creating meeting token for doctor");
     const data = fetch("https://api.daily.co/v1/meeting-tokens", {
@@ -58,14 +92,14 @@ export function UserRegisterForm({
       .then(async (data) => {
         console.log("Success:", data);
         console.log(data.token);
-        createDoctor(userName, email, uid, fullName, data.token);
         setToken(data.token);
         const res = await createDoctor(
           userName,
           email,
           uid,
           fullName,
-          data.token
+          data.token,
+          specialty
         );
       })
       .catch((error) => {
@@ -78,7 +112,8 @@ export function UserRegisterForm({
     email: string,
     uid: string,
     fullName: string,
-    token: string
+    token: string,
+    specialty: string
   ) => {
     const client = new ApolloClient({
       uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
@@ -93,6 +128,7 @@ export function UserRegisterForm({
         status: true,
         uid: uid,
         meeting_token: token,
+        specialty: specialty,
       },
       mutation: gql`
         mutation (
@@ -102,6 +138,7 @@ export function UserRegisterForm({
           $status: Boolean!
           $uid: String!
           $meeting_token: String!
+          $specialty: String!
         ) {
           createDoctor(
             data: {
@@ -111,6 +148,7 @@ export function UserRegisterForm({
               status: $status
               uid: $uid
               meeting_token: $meeting_token
+              specialty: $specialty
             }
           ) {
             data {
@@ -122,6 +160,7 @@ export function UserRegisterForm({
                 address
                 status
                 meeting_token
+                specialty
               }
             }
           }
@@ -153,6 +192,7 @@ export function UserRegisterForm({
   };
 
   const onSubmit = (data: any) => {
+    console.log("data", data);
     axios
       .post(
         `${process.env.NEXT_PUBLIC_BACKEND_STRAPI_RAW}/api/auth/local/register`,
@@ -170,7 +210,8 @@ export function UserRegisterForm({
           data.userName,
           data.email,
           uid,
-          data.fullName
+          data.fullName,
+          data.specialty
         );
 
         localStorage.setItem("jwtToken", response.data.jwt);
@@ -197,6 +238,7 @@ export function UserRegisterForm({
   const [isLoading, setIsLoading] = useState(false);
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -224,6 +266,30 @@ export function UserRegisterForm({
             {errors?.fullName && (
               <p className="px-1 text-xs text-red-600">sadf</p>
             )}
+          </div>
+          <div className="grid gap-1">
+            <Label className="sr-only" htmlFor="specialty">
+              Specialty
+            </Label>
+            <Controller
+              control={control}
+              name="specialty"
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} {...field}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Specialty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {specialty.map((profession) => (
+                      <SelectItem key={profession.id} value={profession.value}>
+                        {profession.value}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
