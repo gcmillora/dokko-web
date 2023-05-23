@@ -163,7 +163,7 @@ export function DataTableToolbar<TData>({
                               key={appointment.id}
                               value={appointment.id[0]}
                             >
-                              {`${appointment.id[0]}`}
+                              {`#${appointment.id[0]} | ${appointment.patient[0]}`}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -234,7 +234,7 @@ export function DataTableToolbar<TData>({
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit">Create</Button>
               </DialogFooter>
             </form>
           </DialogContent>

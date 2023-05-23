@@ -50,7 +50,7 @@ export async function getAllPrescriptions() {
 export async function getAllDoctors() {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 60,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
@@ -70,7 +70,7 @@ export async function getAllDoctors() {
 export async function getAllPatients() {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 60,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
