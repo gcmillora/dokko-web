@@ -103,7 +103,6 @@ export function DataTableToolbar<TData>({
       .then(async (data) => {
         console.log("Success:", data);
         console.log(data.token);
-        createDoctor(userName, email, uid, fullName, data.token);
         setToken(data.token);
         const res = await createDoctor(
           userName,
