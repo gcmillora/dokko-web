@@ -18,17 +18,15 @@ export default async function Page({ params }: pageProps) {
   const fetchedDoctors = await getAllDoctors();
   const fetchedPatients = await getAllPatients();
 
-  const patients = fetchedPatients?.data?.patients?.data?.map(
-    (patient: any) => {
-      return {
-        id: patient.id,
-        fullName: patient.attributes.fullName,
-        uid: patient.attributes.uid,
-      };
-    }
-  );
+  const patients = fetchedPatients.data.patients.data.map((patient: any) => {
+    return {
+      id: patient.id,
+      fullName: patient.attributes.fullName,
+      uid: patient.attributes.uid,
+    };
+  });
 
-  const doctors = fetchedDoctors?.data?.doctors?.data?.map((doctor: any) => {
+  const doctors = fetchedDoctors.data.doctors.data.map((doctor: any) => {
     return {
       id: doctor.id,
       fullName: doctor.attributes.fullName,
