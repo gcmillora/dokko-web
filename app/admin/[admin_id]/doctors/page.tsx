@@ -21,7 +21,7 @@ export default async function Page({ params }: pageProps) {
       uid: doctor.attributes.uid,
       email: doctor.attributes.email,
       address: doctor.attributes.address,
-      specialty: doctor.attributes.specialty,
+      specialty: doctor.attributes.specialty || "N/A",
     };
   });
 
