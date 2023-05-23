@@ -169,7 +169,7 @@ export function DataTableRowActions<TData>({
                 </Label>
                 <Input
                   id="patient"
-                  placeholder={patient[0]}
+                  placeholder={patient[0] || "Patient Name"}
                   className="col-span-3"
                   disabled
                 />
@@ -181,7 +181,7 @@ export function DataTableRowActions<TData>({
                 </Label>
                 <Input
                   id="type"
-                  placeholder={diag_pres[0]}
+                  placeholder={diag_pres[0] || "Diagnosis"}
                   className="col-span-3"
                   disabled
                 />
@@ -192,7 +192,7 @@ export function DataTableRowActions<TData>({
                 </Label>
                 <Input
                   id="type"
-                  placeholder={diag_pres.at(1)}
+                  placeholder={diag_pres.at(1) || "Prescription"}
                   className="col-span-3"
                   disabled
                 />
@@ -203,7 +203,7 @@ export function DataTableRowActions<TData>({
                 </Label>
                 <Input
                   id="type"
-                  placeholder={diag_pres.at(2)}
+                  placeholder={diag_pres.at(2) || "Notes"}
                   className="col-span-3"
                   disabled
                 />
