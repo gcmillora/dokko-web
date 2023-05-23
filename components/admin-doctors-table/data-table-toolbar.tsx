@@ -57,7 +57,7 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const { toast } = useToast();
   const router = useRouter();
-  const uid = uuid();
+
   const [token, setToken] = useState("");
   const {
     control,
@@ -71,14 +71,6 @@ export function DataTableToolbar<TData>({
     table.getFilteredRowModel().rows.length;
 
   //-------------------------
-  const roomProperties = {
-    name: uid,
-    privacy: "private",
-    properties: {
-      start_audio_off: true,
-      start_video_off: true,
-    },
-  };
 
   const createMeetingToken = async (
     userName: string,
@@ -176,7 +168,16 @@ export function DataTableToolbar<TData>({
     return data;
   };
 
-  const createRoom = async () => {
+  const createRoom = async (uid: string) => {
+    const roomProperties = {
+      name: uid,
+      privacy: "private",
+      properties: {
+        start_audio_off: true,
+        start_video_off: true,
+      },
+    };
+
     //call api curl
     console.log("creating room");
     const data = fetch("https://api.daily.co/v1/rooms/", {
@@ -197,6 +198,7 @@ export function DataTableToolbar<TData>({
   };
 
   const onSubmit = (formData: any) => {
+    const uid = uuid();
     axios
       .post(
         `${process.env.NEXT_PUBLIC_BACKEND_STRAPI_RAW}/api/auth/local/register`,
@@ -209,7 +211,7 @@ export function DataTableToolbar<TData>({
         }
       )
       .then(async (response) => {
-        const room = await createRoom();
+        const room = await createRoom(uid);
         const tk = await createMeetingToken(
           formData.username,
           formData.email,

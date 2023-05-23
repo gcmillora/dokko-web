@@ -105,7 +105,6 @@ query {
                 specialty
                 email
                 address
-                medicalId
                 }
             }
         }
