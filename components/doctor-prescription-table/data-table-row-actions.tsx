@@ -152,7 +152,7 @@ export function DataTableRowActions<TData>({
           </form>
         </DialogContent>
       )}
-
+      {/* 
       {type === "edit" && (
         <DialogContent>
           <DialogHeader>
@@ -216,7 +216,7 @@ export function DataTableRowActions<TData>({
             </DialogFooter>
           </form>
         </DialogContent>
-      )}
+      )} */}
     </Dialog>
   );
 }
