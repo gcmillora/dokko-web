@@ -18,12 +18,13 @@ export default async function Page({ params }: pageProps) {
     return {
       id: [doctor.id, doctor.attributes.uid],
       fullName: doctor.attributes.fullName,
-
+      uid: doctor.attributes.uid,
       email: doctor.attributes.email,
       address: doctor.attributes.address,
       specialty: doctor.attributes.specialty || "N/A",
     };
   });
+  console.log(doctors);
 
   return (
     <>
