@@ -90,7 +90,7 @@ export async function getAllPatients() {
 export async function getUserData(uid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 60,
+      revalidate: 5,
     },
     method: "POST",
     headers: {

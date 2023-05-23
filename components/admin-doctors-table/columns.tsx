@@ -60,7 +60,7 @@ export const columns: ColumnDef<any>[] = [
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("specialty")}
+            {row.getValue("specialty") || "N/A"}
           </span>
         </div>
       );
