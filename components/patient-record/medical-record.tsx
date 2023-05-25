@@ -24,11 +24,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useToast } from "../ui/use-toast";
 
 export function MedicalRecordCard() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
+
+  const { toast } = useToast();
 
   const {
     control,
@@ -49,11 +52,21 @@ export function MedicalRecordCard() {
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label htmlFor="height">Height (centimeters)</Label>
-            <Input id="height" placeholder="in centimeters" type="number" />
+            <Input
+              id="height"
+              placeholder="in centimeters"
+              type="number"
+              {...register("height", { required: true })}
+            />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="height">Weight (kg)</Label>
-            <Input id="height" placeholder="in kilograms" type="number" />
+            <Label htmlFor="weight">Weight (kg)</Label>
+            <Input
+              id="weight"
+              placeholder="in kilograms"
+              type="number"
+              {...register("weight", { required: true })}
+            />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -114,6 +127,7 @@ export function MedicalRecordCard() {
           <Textarea
             id="allergies"
             placeholder="Shrimp, Chicken, Eggs, Peanuts"
+            {...register("allergies")}
           />
         </div>
       </CardContent>

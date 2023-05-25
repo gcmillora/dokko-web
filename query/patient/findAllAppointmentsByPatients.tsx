@@ -155,6 +155,7 @@ export const patientAppointmentsQueryByID = `query ($id: ID!) {
         status
         condition
         notes
+        patient_tkn
       }
     }
   }

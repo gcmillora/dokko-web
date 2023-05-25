@@ -59,6 +59,7 @@ export function DataTableRowActions<TData>({
   const virtual = row.getValue("type") === "Virtual" ? true : false;
   const id: [any] = row.getValue("id");
   const { toast } = useToast();
+  console.log(doctor.at(4));
 
   const {
     control,
