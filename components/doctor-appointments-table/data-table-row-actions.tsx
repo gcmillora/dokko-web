@@ -177,7 +177,7 @@ export function DataTableRowActions<TData>({
       console.log("appointment", appId[0]);
       console.log("date", date[0]);
 
-      createPatientMeetingToken(patient.at(3), appId[0], date[0]);
+      createPatientMeetingToken(patient.at(3), appId[0], date.at(3));
     }
     return response;
   };
