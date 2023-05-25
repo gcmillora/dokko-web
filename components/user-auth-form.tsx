@@ -4,7 +4,7 @@ import { Label } from "./ui/label";
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { useForm } from "react-hook-form";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { Icons } from "./icons";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import axios from "axios";
@@ -171,8 +171,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               <p className="px-1 text-xs text-red-600">Required*</p>
             )}
           </div>
-        </div>
-        <div className="grid gap-2 mt-2">
+
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
               Password
@@ -194,21 +193,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               <p className="px-1 text-xs text-red-600">Required*</p>
             )}
           </div>
-          <button
-            type="submit"
-            className={cn(buttonVariants({}))}
-            onClick={() => {
-              setIsLoading(true);
-            }}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Icons.login className="mr-2 h-4 w-4" />
-            )}{" "}
+          <Button type="submit" variant="default">
+            <Icons.login className="mr-2 h-4 w-4" />
             Sign-in
-          </button>
+          </Button>
         </div>
       </form>
     </div>
