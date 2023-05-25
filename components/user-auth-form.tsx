@@ -98,6 +98,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   };
 
   const onSubmit = (data: any) => {
+    console.log(data);
     axios
       .post(`${process.env.NEXT_PUBLIC_BACKEND_STRAPI_RAW}/api/auth/local`, {
         identifier: data.email,
