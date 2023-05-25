@@ -135,10 +135,10 @@ export function DataTableToolbar<TData>({
     "11:30 AM",
     "12:00 PM",
     "12:30 PM",
-    "1:00 PM",
-    "1:30 PM",
-    "2:00 PM",
-    "2:30 PM",
+    "13:00 PM",
+    "13:30 PM",
+    "14:00 PM",
+    "14:30 PM",
   ];
 
   return (
