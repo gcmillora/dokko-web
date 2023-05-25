@@ -90,11 +90,7 @@ export function DataTableRowActions<TData>({
       });
     }
     if (virtual === true) {
-      console.log("doctor", patient.at(3));
-      console.log("appointment", appId[0]);
-      console.log("date", date[0]);
-
-      createPatientMeetingToken(patient.at(3), appId[0], date[0]);
+      createPatientMeetingToken(patient.at(3), appId[0], date.at(3));
     }
     return response;
   };

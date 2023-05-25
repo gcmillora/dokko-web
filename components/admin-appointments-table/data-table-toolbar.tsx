@@ -78,12 +78,10 @@ export function DataTableToolbar<TData>({
     if (selectedDate === undefined) return;
     data.map((appointment: any) => {
       if (appointment.date[1] === selectedDate.toDateString()) {
-        console.log(appointment.date[2]);
         times.push(appointment.date[2]);
       }
     });
     setExcludedTimes(times);
-    console.log(times);
   }, [selectedDate, data]);
 
   const onSubmit = async (formData: any) => {

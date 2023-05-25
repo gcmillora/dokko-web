@@ -93,8 +93,6 @@ export function DataTableRowActions<TData>({
   } = useForm();
 
   const onSubmit = async (formData: any) => {
-    console.log("Form Data: ", formData);
-
     const jwtToken = localStorage.getItem("jwtToken");
     const id = localStorage.getItem("id") || "";
 
@@ -105,9 +103,6 @@ export function DataTableRowActions<TData>({
     appDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
 
     const appType = virtual ? "Virtual" : "In-Person";
-    console.log(appType);
-    console.log(formData.condition);
-    console.log(formData.generalPurpose);
 
     const response = await insertOneAppointment(
       jwtToken as string,
@@ -173,10 +168,6 @@ export function DataTableRowActions<TData>({
       });
     }
     if (virtual === true) {
-      console.log("doctor", patient.at(3));
-      console.log("appointment", appId[0]);
-      console.log("date", date[0]);
-
       createPatientMeetingToken(patient.at(3), appId[0], date.at(3));
     }
     return response;

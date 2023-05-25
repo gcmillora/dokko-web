@@ -78,7 +78,6 @@ export function DataTableToolbar<TData>({
     uid: string,
     fullName: string
   ) => {
-    console.log("creating meeting token for doctor");
     const data = fetch("https://api.daily.co/v1/meeting-tokens", {
       method: "POST",
       headers: {
@@ -93,8 +92,6 @@ export function DataTableToolbar<TData>({
     })
       .then((response) => response.json())
       .then(async (data) => {
-        console.log("Success:", data);
-        console.log(data.token);
         setToken(data.token);
         const res = await createDoctor(
           userName,
@@ -179,7 +176,6 @@ export function DataTableToolbar<TData>({
     };
 
     //call api curl
-    console.log("creating room");
     const data = fetch("https://api.daily.co/v1/rooms/", {
       method: "POST",
       headers: {

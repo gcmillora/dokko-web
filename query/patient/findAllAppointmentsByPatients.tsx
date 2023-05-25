@@ -3,7 +3,6 @@
 import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
 export const findAllAppointments = async (patient_id: string) => {
-  console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
   const client = new ApolloClient({
     ssrMode: true,
     uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,

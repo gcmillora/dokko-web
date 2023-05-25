@@ -52,7 +52,6 @@ export async function getAppointments(doctorid: string) {
 }
 
 export async function getPrescriptions(doctorid: string) {
-  console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
       revalidate: 20,

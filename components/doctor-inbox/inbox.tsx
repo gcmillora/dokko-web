@@ -128,11 +128,7 @@ export function Inbox({ conversations, patients }: InboxProps) {
         variant: "constructive",
       });
     }
-    console.log("submitted data:", formData);
   }
-
-  console.log(conversations);
-  console.log("doctors", patients);
 
   function handleSelectedConversation(conversationId: string) {
     const selected = conversations.find(

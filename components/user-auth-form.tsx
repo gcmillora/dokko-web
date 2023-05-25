@@ -98,8 +98,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   };
 
   const onSubmit = (data: any) => {
-    console.log(data);
-
     axios
       .post(`${process.env.NEXT_PUBLIC_BACKEND_STRAPI_RAW}/api/auth/local`, {
         identifier: data.email,
@@ -118,7 +116,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           localStorage.setItem("uid", doctor.doctors.data[0].attributes.uid);
           router.push(`/doctor/${doctor.doctors.data[0].attributes.uid}`);
         } else if (response.data.user.level === "admin") {
-          console.log("admin");
           const admin = await findOneUser(data.email);
           localStorage.setItem("id", admin.usersPermissionsUsers.data[0].id);
           localStorage.setItem(

@@ -71,11 +71,9 @@ export function DataTableToolbar<TData>({
   } = useForm();
 
   const onSubmit = async (formData: any) => {
-    console.log("data", formData);
     const patientid = appointments.find(
       (appointment: any) => appointment.id[0] === formData.appointment
     ).patient[2];
-    console.log("patientid", patientid);
     const jwtToken = localStorage.getItem("jwtToken") || "";
     const response = await insertOnePrescription(
       jwtToken,

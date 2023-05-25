@@ -75,7 +75,6 @@ export function UserRegisterForm({
     fullName: string,
     specialty: string
   ) => {
-    console.log("creating meeting token for doctor");
     const data = fetch("https://api.daily.co/v1/meeting-tokens", {
       method: "POST",
       headers: {
@@ -90,8 +89,6 @@ export function UserRegisterForm({
     })
       .then((response) => response.json())
       .then(async (data) => {
-        console.log("Success:", data);
-        console.log(data.token);
         setToken(data.token);
         const res = await createDoctor(
           userName,
@@ -173,7 +170,7 @@ export function UserRegisterForm({
 
   const createRoom = async () => {
     //call api curl
-    console.log("creating room");
+
     const data = fetch("https://api.daily.co/v1/rooms/", {
       method: "POST",
       headers: {
@@ -192,7 +189,6 @@ export function UserRegisterForm({
   };
 
   const onSubmit = (data: any) => {
-    console.log("data", data);
     axios
       .post(
         `${process.env.NEXT_PUBLIC_BACKEND_STRAPI_RAW}/api/auth/local/register`,

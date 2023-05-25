@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   description: "Doctors",
 };
 export default async function Page({ params }: pageProps) {
-  console.log(params.admin_id);
   const fetchedPatients = await getAllPatients();
   const patients = fetchedPatients.data.patients.data.map((patient: any) => {
     return {

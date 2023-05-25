@@ -37,18 +37,15 @@ interface DoctorUserNavProps {
 }
 export function DoctorUserNav({ id, type, doctor }: DoctorUserNavProps) {
   const router = useRouter();
-  console.log(doctor);
   const [file, setFile] = useState<File>();
   const { toast } = useToast();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("file changed");
     if (e.target.files) {
       setFile(e.target.files[0]);
     }
   };
   const uploadProfile = async () => {
     if (file) {
-      console.log(id);
       var formData = new FormData();
       if (type === "doctor") formData.append("ref", "api::doctor.doctor");
       else if (type === "patient")

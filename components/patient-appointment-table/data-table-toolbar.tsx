@@ -76,16 +76,13 @@ export function DataTableToolbar<TData>({
     if (selectedDate === undefined) return;
     data.map((appointment: any) => {
       if (appointment.date[1] === selectedDate.toDateString()) {
-        console.log(appointment.date[2]);
         times.push(appointment.date[2]);
       }
     });
     setExcludedTimes(times);
-    console.log(times);
   }, [selectedDate, data]);
 
   const onSubmit = async (formData: any) => {
-    console.log("Form Data: ", formData);
     const jwtToken = localStorage.getItem("jwtToken");
     const id = localStorage.getItem("id") || "";
 
@@ -94,8 +91,7 @@ export function DataTableToolbar<TData>({
 
     const appDate = new Date(formData.date ? formData.date : selectedDate);
     appDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-    console.log(appDate);
-    console.log(data[0]);
+
     const response = await insertOneAppointment(
       jwtToken as string,
       id,
