@@ -102,7 +102,7 @@ export default async function Page({ params }: pageProps) {
         appointment.attributes.doctor.data.attributes.uid,
         appointment.attributes.doctor.data.id,
         appointment.attributes.doctor.data.attributes.meeting_token,
-        appointment.attributes.patient.data.attributes.patient_tkn,
+        appointment.attributes.patient_tkn,
       ],
       date: [
         new Date(appointment.attributes.appointmentDate),
