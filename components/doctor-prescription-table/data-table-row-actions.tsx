@@ -40,6 +40,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
+import { useForm } from "react-hook-form";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -55,6 +56,15 @@ export function DataTableRowActions<TData>({
   const diag_pres: [any] = row.getValue("diagnosis");
   const patient: [any] = row.getValue("patient");
 
+  async function onSubmit(formData: any) {
+    console.log(formData);
+  }
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   return (
     <Dialog>
       <DropdownMenu>
@@ -152,16 +162,16 @@ export function DataTableRowActions<TData>({
           </form>
         </DialogContent>
       )}
-      {/* 
+
       {type === "edit" && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{`Prescription ${id[0]}`}</DialogTitle>
+            <DialogTitle>{`Edit Prescription ${id[0]}`}</DialogTitle>
             <DialogDescription>
               View your prescription here. Click proceed when you are done.
             </DialogDescription>
           </DialogHeader>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
@@ -183,7 +193,7 @@ export function DataTableRowActions<TData>({
                   id="type"
                   placeholder={diag_pres[0] || "Diagnosis"}
                   className="col-span-3"
-                  disabled
+                  {...register("diagnosis", { required: true })}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -194,7 +204,7 @@ export function DataTableRowActions<TData>({
                   id="type"
                   placeholder={diag_pres.at(1) || "Prescription"}
                   className="col-span-3"
-                  disabled
+                  {...register("prescription", { required: true })}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
@@ -205,18 +215,18 @@ export function DataTableRowActions<TData>({
                   id="type"
                   placeholder={diag_pres.at(2) || "Notes"}
                   className="col-span-3"
-                  disabled
+                  {...register("notes", { required: true })}
                 />
               </div>
             </div>
             <DialogFooter>
-              <DialogClose>
-                <Button>Confirm</Button>
-              </DialogClose>
+              <>
+                <Button type="submit">Confirm</Button>
+              </>
             </DialogFooter>
           </form>
         </DialogContent>
-      )} */}
+      )}
     </Dialog>
   );
 }
