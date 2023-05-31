@@ -22,10 +22,14 @@ export default async function Page({ params }: pageProps) {
   const fetchedConversations = await getConversations(params.patient_id);
   const conversations = fetchedConversations.data.conversations.data;
   const fetchedDoctors = await getDoctors();
-  const doctors = fetchedDoctors.data.doctors.data;
+  const doctors = fetchedDoctors.data.doctors.data.filter((doctor: any) => {
+    return doctor.attributes.status === true;
+  });
 
   const fetchedPatient = await getPatientData(params.patient_id);
-  const patient = fetchedPatient.data.patients.data;
+  const patient = fetchedPatient.data.patients.data.filter((patient: any) => {
+    return patient.attributes.status === true;
+  });
   const id = patient[0].id;
 
   return (

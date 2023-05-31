@@ -48,6 +48,7 @@ import { useToast } from "../ui/use-toast";
 import { updateOneAppointmentById } from "@/query/updateOneAppointment copy";
 import { createPatientMeetingToken } from "@/query/video-chat/createPatientMeetingToken";
 import { Textarea } from "../ui/textarea";
+import { DeleteDoctor } from "@/query/deleteDoctor";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -66,6 +67,23 @@ export function DataTableRowActions<TData>({
   const address: string = row.getValue("address") || "";
 
   const [type, setType] = useState("");
+
+  async function deleteDoctor() {
+    const response = await DeleteDoctor(pId[0]);
+    if (response.error) {
+      toast({
+        title: "Deleting doctor failed.",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Doctor deleted successfully.",
+        description: "Your appointment has been deleted.",
+        variant: "constructive",
+      });
+    }
+  }
 
   return (
     <Dialog>
@@ -93,7 +111,7 @@ export function DataTableRowActions<TData>({
             </DropdownMenuItem>
           </DialogTrigger>
 
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => deleteDoctor()}>
             <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Delete
           </DropdownMenuItem>

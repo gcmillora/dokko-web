@@ -45,6 +45,7 @@ export const QueryOneDoctor = `query ($uid: String!) {
       id
       attributes {
         address
+        status
         uid
         fullName
         email

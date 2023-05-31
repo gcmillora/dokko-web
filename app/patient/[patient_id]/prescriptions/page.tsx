@@ -58,7 +58,9 @@ async function getData(patientid: string) {
 export default async function Page({ params }: pageProps) {
   const data = await getData(params.patient_id);
   const fetchedPatient = await getPatientData(params.patient_id);
-  const patient = fetchedPatient.data.patients.data;
+  const patient = fetchedPatient.data.patients.data.filter(
+    (patient: any) => patient.attributes.status === true
+  );
   const id = patient[0].id;
 
   const prescriptions = data.data.prescriptions.data.map(

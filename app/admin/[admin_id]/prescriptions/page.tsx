@@ -27,15 +27,15 @@ export default async function Page({ params }: pageProps) {
       return {
         id: [prescription.id, prescription.attributes.uid],
         patient: [
-          prescription.attributes.patient.data.attributes.fullName,
-          prescription.attributes.patient.data.attributes.uid,
-          prescription.attributes.patient.data.id,
+          prescription.attributes?.patient?.data?.attributes?.fullName,
+          prescription.attributes?.patient?.data?.attributes?.uid,
+          prescription.attributes?.patient?.data?.id,
         ],
 
         doctor: [
-          prescription.attributes.doctor.data.attributes.fullName,
-          prescription.attributes.doctor.data.attributes.uid,
-          prescription.attributes.doctor.data.id,
+          prescription.attributes?.doctor?.data?.attributes?.fullName,
+          prescription.attributes?.doctor?.data?.attributes?.uid,
+          prescription.attributes?.doctor?.data?.id,
         ],
         appointment: prescription.attributes.appointment.data.id,
         uid: prescription.attributes.uid,

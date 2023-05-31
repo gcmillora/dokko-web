@@ -53,6 +53,7 @@ export const QueryOnePatient = `query ($uid: String!) {
     data {
       id
       attributes {
+        status
         uid
         fullName
         email

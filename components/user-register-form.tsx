@@ -146,7 +146,8 @@ export function UserRegisterForm({
         toast({
           variant: "destructive",
           title: "Error: Couldn't create patient",
-          description: "Please try again later or check your information.",
+          description:
+            "Please try again later or check your information.\n If the problem persists, please contact the administrator.",
         });
       });
   };

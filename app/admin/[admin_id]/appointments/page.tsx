@@ -41,17 +41,17 @@ export default async function Page({ params }: pageProps) {
       return {
         id: [appointment.id, appointment.attributes.uid],
         patient: [
-          appointment.attributes.patient.data.attributes.fullName,
-          appointment.attributes.patient.data.attributes.uid,
-          appointment.attributes.patient.data.id,
+          appointment?.attributes?.patient?.data?.attributes?.fullName,
+          appointment?.attributes?.patient?.data?.attributes?.uid,
+          appointment?.attributes?.patient?.data?.id,
         ],
-        generalPurpose: appointment.attributes.generalPurpose,
+        generalPurpose: appointment?.attributes?.generalPurpose,
         doctor: [
-          appointment.attributes.doctor.data.attributes.fullName,
-          appointment.attributes.doctor.data.attributes.uid,
-          appointment.attributes.doctor.data.id,
-          appointment.attributes.doctor.data.attributes.meeting_token,
-          appointment.attributes.patient.data.attributes.patient_tkn,
+          appointment.attributes?.doctor?.data?.attributes?.fullName,
+          appointment.attributes?.doctor?.data?.attributes?.uid,
+          appointment.attributes?.doctor?.data?.id,
+          appointment.attributes?.doctor?.data?.attributes?.meeting_token,
+          appointment.attributes?.patient?.data?.attributes?.patient_tkn,
         ],
         date: [
           new Date(appointment.attributes.appointmentDate),

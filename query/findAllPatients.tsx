@@ -37,6 +37,7 @@ export const QueryAllPatients = `query {
       attributes {
         uid
         fullName
+        status
       }
     }
   }

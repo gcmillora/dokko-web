@@ -106,6 +106,7 @@ query {
               email
               address
               medicalId
+              status
               }
           }
       }
@@ -123,6 +124,7 @@ query {
                 phoneNumber
                 email
                 address
+                status
                 }
             }
         }

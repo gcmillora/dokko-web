@@ -15,16 +15,20 @@ export const metadata: Metadata = {
 };
 export default async function Page({ params }: pageProps) {
   const fetchedPatients = await getAllPatients();
-  const patients = fetchedPatients.data.patients.data.map((patient: any) => {
-    return {
-      id: [patient.id, patient.attributes.uid],
-      fullName: patient.attributes.fullName,
-      uid: patient.attributes.uid,
-      email: patient.attributes.email,
-      phoneNumber: patient.attributes.phoneNumber,
-      address: patient.attributes.address,
-    };
-  });
+  const patients = fetchedPatients.data.patients.data
+    .filter((patient: any) => {
+      return patient.attributes.status === true;
+    })
+    .map((patient: any) => {
+      return {
+        id: [patient.id, patient.attributes.uid],
+        fullName: patient.attributes.fullName,
+        uid: patient.attributes.uid,
+        email: patient.attributes.email,
+        phoneNumber: patient.attributes.phoneNumber,
+        address: patient.attributes.address,
+      };
+    });
 
   return (
     <>

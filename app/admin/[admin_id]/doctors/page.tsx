@@ -15,17 +15,22 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: pageProps) {
   const fetchedDoctors = await getAllDoctors();
-  const doctors = fetchedDoctors?.data?.doctors?.data.map((doctor: any) => {
-    return {
-      id: [doctor.id, doctor.attributes.uid || ""],
-      fullName: doctor.attributes.fullName || "",
-      uid: doctor.attributes.uid || "",
-      email: doctor.attributes.email || "",
-      phoneNumber: doctor.attributes.phoneNumber || "",
-      address: doctor.attributes.address || "",
-      specialty: doctor.attributes.specialty || "",
-    };
-  });
+  const doctors = fetchedDoctors?.data?.doctors?.data
+    .filter((doctor: any) => {
+      return doctor.attributes.status === true;
+    })
+    .map((doctor: any) => {
+      return {
+        id: [doctor.id, doctor.attributes.uid || ""],
+        fullName: doctor.attributes.fullName || "",
+        uid: doctor.attributes.uid || "",
+        email: doctor.attributes.email || "",
+        phoneNumber: doctor.attributes.phoneNumber || "",
+        address: doctor.attributes.address || "",
+        specialty: doctor.attributes.specialty || "",
+        status: doctor.attributes.status || "",
+      };
+    });
 
   return (
     <>

@@ -25,7 +25,9 @@ export const metadata: Metadata = {
 export default async function RecordPage({ params }: pageProps) {
   const uid = params.patient_id;
   const fetchedPatient = await getPatientData(params.patient_id);
-  const patient = fetchedPatient.data.patients.data;
+  const patient = fetchedPatient.data.patients.data.filter((patient: any) => {
+    return patient.attributes.status === true;
+  });
   const id = patient[0].id;
 
   return (

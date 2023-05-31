@@ -79,14 +79,18 @@ export default async function Page({ params }: pageProps) {
   const patient = fetchedPatient.data.patients.data;
   const id = patient[0].id;
 
-  const doctors = fetchedDoctors?.data?.doctors?.data?.map((doctor: any) => {
-    return {
-      id: doctor.id,
-      fullName: doctor.attributes.fullName,
-      uid: doctor.attributes.uid,
-      specialty: doctor.attributes.specialty,
-    };
-  });
+  const doctors = fetchedDoctors?.data?.doctors?.data
+    ?.filter((doctor: any) => {
+      return doctor.attributes.status === true;
+    })
+    .map((doctor: any) => {
+      return {
+        id: doctor.id,
+        fullName: doctor.attributes.fullName,
+        uid: doctor.attributes.uid,
+        specialty: doctor.attributes.specialty,
+      };
+    });
 
   const appointments = data.data.appointments.data.map((appointment: any) => {
     return {

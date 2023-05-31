@@ -42,6 +42,7 @@ export const findAllDoctorQuery = `query {
         uid
         fullName
         specialty
+        status
       }
     }
   }

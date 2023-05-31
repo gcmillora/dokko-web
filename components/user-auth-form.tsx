@@ -60,6 +60,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 uid
                 fullName
                 email
+                status
               }
             }
           }
@@ -87,6 +88,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 uid
                 fullName
                 email
+                status
               }
             }
           }
@@ -110,12 +112,28 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           const patient = await findOnePatient(data.email);
           localStorage.setItem("id", patient.patients.data[0].id);
           localStorage.setItem("uid", patient.patients.data[0].attributes.uid);
-          router.push(`/patient/${patient.patients.data[0].attributes.uid}`);
+          if (patient.patients.data[0].attributes.status === false) {
+            toast({
+              variant: "destructive",
+              title: "Sign-in failed",
+              description: "Your account is not active. Please contact admin.",
+            });
+          } else {
+            router.push(`/patient/${patient.patients.data[0].attributes.uid}`);
+          }
         } else if (response.data.user.level === "doctor") {
           const doctor = await findOneDoctor(data.email);
           localStorage.setItem("id", doctor.doctors.data[0].id);
           localStorage.setItem("uid", doctor.doctors.data[0].attributes.uid);
-          router.push(`/doctor/${doctor.doctors.data[0].attributes.uid}`);
+          if (doctor.doctors.data[0].attributes.status === false) {
+            toast({
+              variant: "destructive",
+              title: "Sign-in failed",
+              description: "Your account is not active. Please contact admin.",
+            });
+          } else {
+            router.push(`/doctor/${doctor.doctors.data[0].attributes.uid}`);
+          }
         } else if (response.data.user.level === "admin") {
           const admin = await findOneUser(data.email);
           localStorage.setItem("id", admin.usersPermissionsUsers.data[0].id);
