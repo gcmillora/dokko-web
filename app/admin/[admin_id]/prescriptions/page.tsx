@@ -48,8 +48,11 @@ export default async function Page({ params }: pageProps) {
     }
   );
 
-  const appointments = fetchedAppointments.data.appointments.data.map(
-    (appointment: any) => {
+  const appointments = fetchedAppointments.data.appointments.data
+    .filter((appointment: any) => {
+      return appointment.attributes.status === true;
+    })
+    .map((appointment: any) => {
       return {
         id: [appointment.id, appointment.attributes.uid],
         patient: [
@@ -70,8 +73,7 @@ export default async function Page({ params }: pageProps) {
           appointment.attributes.notes,
         ],
       };
-    }
-  );
+    });
 
   return (
     <>

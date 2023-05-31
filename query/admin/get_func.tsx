@@ -82,6 +82,7 @@ query {
                         id
                         attributes {
                             uid
+                            status
                             }
                         }
                     }
