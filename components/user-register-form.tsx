@@ -153,11 +153,13 @@ export function UserRegisterForm({
 
   const [isLoading, setIsLoading] = useState(false);
   const [isGitHubLoading, setIsGitHubLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   return (
     <div className={cn("grid gap-6", className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>

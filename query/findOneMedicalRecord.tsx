@@ -1,6 +1,6 @@
 //find one medical record using graphql
 
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
 export const findOneMedicalRecord = async (medical_id: string) => {
   const client = new ApolloClient({
@@ -33,3 +33,20 @@ export const findOneMedicalRecord = async (medical_id: string) => {
 
   return data;
 };
+
+export const QueryOneMedicalRecord = `   query ($uid: String!) {
+  medicalRedicords(filters: { uid: { eq: $uid } }) {
+    data {
+      id
+      attributes {
+        uid
+        sex
+        height
+        weight
+        bloodtype
+        allergies
+        birthdate
+      }
+    }
+  }
+}`;

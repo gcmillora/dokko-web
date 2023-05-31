@@ -43,7 +43,6 @@ export function BasicHealthRecord() {
 
   const onSubmit = async (data: any) => {
     const patientid = localStorage.getItem("id") || "";
-
     const jwtToken = localStorage.getItem("jwtToken") || "";
     const response = await updateOnePatient(patientid, jwtToken, data);
     if (response.error) {

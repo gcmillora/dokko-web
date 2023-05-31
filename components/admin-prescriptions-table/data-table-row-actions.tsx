@@ -40,6 +40,9 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
+import { useForm } from "react-hook-form";
+import { updateOnePrescription } from "@/query/updateOnePrescription";
+import { useToast } from "../ui/use-toast";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -50,10 +53,40 @@ export function DataTableRowActions<TData>({
   row,
   data,
 }: DataTableRowActionsProps<TData>) {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [type, setType] = useState("");
   const id: [any] = row.getValue("id");
   const diag_pres: [any] = row.getValue("diagnosis");
   const patient: [any] = row.getValue("patient");
+
+  const { toast } = useToast();
+
+  async function onEdit(formData: any) {
+    const response = await updateOnePrescription(
+      formData.diagnosis,
+      formData.prescription,
+      id[0],
+      formData.notes
+    );
+    if (response.error) {
+      toast({
+        title: "Error: Prescription not updated",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success: Prescription updated",
+        description: "Your prescription has been updated.",
+        variant: "constructive",
+      });
+    }
+  }
 
   return (
     <Dialog>
@@ -156,7 +189,7 @@ export function DataTableRowActions<TData>({
               done.
             </DialogDescription>
           </DialogHeader>
-          <form>
+          <form onSubmit={handleSubmit(onEdit)}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">

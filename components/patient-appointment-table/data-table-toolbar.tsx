@@ -25,7 +25,6 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { Label } from "../ui/label";
-import { Calendar } from "../ui/calendar";
 import {
   Select,
   SelectContent,
@@ -41,6 +40,7 @@ import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { insertOneAppointment } from "@/query/insertOneAppointment";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { Calendar } from "../ui/calendar";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -120,6 +120,7 @@ export function DataTableToolbar<TData>({
     }
   };
 
+  //allowed times should be all times after the current time and before 4pm (16:00)
   const allowedTimes = [
     "8:00 AM",
     "9:00 AM",
@@ -130,6 +131,8 @@ export function DataTableToolbar<TData>({
     "14:00 PM",
     "15:00 PM",
     "16:00 PM",
+    "17:00 PM",
+    "18:00 PM",
   ];
 
   return (
@@ -226,6 +229,7 @@ export function DataTableToolbar<TData>({
                         name="date"
                         render={({ field }) => (
                           <Calendar
+                            fromDate={new Date()}
                             initialFocus
                             mode="single"
                             selected={field.value}

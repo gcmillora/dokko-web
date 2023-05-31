@@ -7,7 +7,7 @@ import { QueryOneDoctor } from "@/query/findOneDoctor";
 export async function getDoctorData(doctorid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
@@ -29,7 +29,7 @@ export async function getDoctorData(doctorid: string) {
 export async function getAppointments(doctorid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
@@ -54,7 +54,7 @@ export async function getAppointments(doctorid: string) {
 export async function getPrescriptions(doctorid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {

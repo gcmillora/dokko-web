@@ -114,6 +114,31 @@ export const columns: ColumnDef<any>[] = [
     },
   },
   {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[250px] truncate font-medium">
+            {row.getValue("status") ? (
+              <span>
+                {" "}
+                <Badge variant="constructive">Approved</Badge>{" "}
+              </span>
+            ) : (
+              <span>
+                {" "}
+                <Badge variant="destructive">Pending</Badge>{" "}
+              </span>
+            )}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       return <DataTableRowActions row={row} data={row.getValue("id")} />;

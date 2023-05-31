@@ -18,6 +18,7 @@ import {
 import { Overview } from "@/components/overview";
 import { doctorDefaultPhoto } from "@/utils/exports";
 import { OverviewPie } from "@/components/overview-pie";
+import { AdminUserNav } from "@/components/admin-dashboard/user-nav";
 
 interface pageProps {
   params: { admin_id: string };
@@ -126,7 +127,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.admin_id, type: "admin" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              {/* <UserNavPatient id={id} type={"admin"} patient={patient} /> */}
+              <AdminUserNav />
             </div>
           </div>
         </div>

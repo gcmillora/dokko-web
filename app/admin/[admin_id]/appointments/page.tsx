@@ -3,6 +3,7 @@ import { getAllAppointments, getAllDoctors, getAllPatients } from "../../utils";
 import { DataTable } from "@/components/admin-appointments-table/data-table";
 import { columns } from "@/components/admin-appointments-table/columns";
 import { Metadata } from "next";
+import { AdminUserNav } from "@/components/admin-dashboard/user-nav";
 
 interface pageProps {
   params: { admin_id: string };
@@ -83,7 +84,7 @@ export default async function Page({ params }: pageProps) {
               {...{ id: params.admin_id, type: "admin" }}
             />
             <div className="ml-auto flex items-center space-x-4">
-              {/* <UserNavPatient id={id} type={"patient"} patient={patient} /> */}
+              <AdminUserNav />
             </div>
           </div>
         </div>

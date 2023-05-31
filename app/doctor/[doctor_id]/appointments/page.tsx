@@ -57,7 +57,7 @@ async function getData(doctorid: string) {
 async function getDoctors() {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {

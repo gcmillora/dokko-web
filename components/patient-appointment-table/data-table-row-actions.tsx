@@ -9,6 +9,7 @@ import {
   Tags,
   Trash,
   Video,
+  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointment
 import { useForm } from "react-hook-form";
 import { updateOneAppointment } from "@/query/updateOneAppointment";
 import { useToast } from "../ui/use-toast";
+import { DeletePatientAppointment } from "@/query/deletePatientAppointment";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -60,6 +62,7 @@ export function DataTableRowActions<TData>({
   const id: [any] = row.getValue("id");
   const { toast } = useToast();
   console.log(doctor.at(4));
+  const status = row.getValue("status") ? false : true;
 
   const {
     control,
@@ -80,6 +83,23 @@ export function DataTableRowActions<TData>({
       toast({
         title: "Appointment updated successfully.",
         description: "Your appointment has been updated.",
+        variant: "constructive",
+      });
+    }
+  }
+
+  async function cancelAppointment() {
+    const response = await DeletePatientAppointment(id[0]);
+    if (response.error) {
+      toast({
+        title: "Deleting appointment failed.",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Appointment deleted successfully.",
+        description: "Your appointment has been deleted.",
         variant: "constructive",
       });
     }
@@ -108,10 +128,17 @@ export function DataTableRowActions<TData>({
             </DropdownMenuItem>
           </DialogTrigger>
           <DialogTrigger asChild>
-            <DropdownMenuItem onClick={() => setType("edit")}>
-              <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-              Edit
-            </DropdownMenuItem>
+            {status ? (
+              <DropdownMenuItem onClick={() => setType("edit")}>
+                <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+                Edit
+              </DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem onClick={() => setType("edit")} disabled>
+                <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+                Edit
+              </DropdownMenuItem>
+            )}
           </DialogTrigger>
           {virtual && (
             <DropdownMenuItem onClick={() => goToVirtualRoom()}>
@@ -119,11 +146,17 @@ export function DataTableRowActions<TData>({
               Virtual Room
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem>
-            <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Delete
-            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          {status ? (
+            <DropdownMenuItem onClick={() => cancelAppointment()}>
+              <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              Cancel
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onClick={() => cancelAppointment()} disabled>
+              <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              Cancel
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

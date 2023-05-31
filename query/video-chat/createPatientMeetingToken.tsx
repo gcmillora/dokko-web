@@ -14,8 +14,8 @@ export const createPatientMeetingToken = async (
     body: JSON.stringify({
       properties: {
         room_name: doctorUID,
-        // nbf: new Date(appointmentDate).getTime() / 1000,
-        // exp: new Date(appointmentDate).getTime() / 1000 + 1800,
+        nbf: new Date(appointmentDate).getTime() / 1000,
+        exp: new Date(appointmentDate).getTime() / 1000 + 3600,
       },
     }),
   })

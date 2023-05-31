@@ -40,7 +40,7 @@ interface pageProps {
 async function getData(patientid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
@@ -65,7 +65,7 @@ async function getData(patientid: string) {
 async function getPrescriptions(patientid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {

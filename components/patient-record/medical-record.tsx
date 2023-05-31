@@ -25,6 +25,33 @@ import {
   SelectValue,
 } from "../ui/select";
 import { useToast } from "../ui/use-toast";
+import { QueryOneMedicalRecord } from "@/query/findOneMedicalRecord";
+import { updateMedicalRecord } from "@/query/updateOneMedicalRecord";
+
+async function getMedicalRecord(uid: string) {
+  const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
+    next: {
+      revalidate: 5,
+    },
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // 'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      query: QueryOneMedicalRecord,
+      variables: {
+        uid: uid,
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    console.log("error");
+  }
+  return res.json();
+}
 
 export function MedicalRecordCard() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
@@ -40,6 +67,41 @@ export function MedicalRecordCard() {
     formState: { errors },
   } = useForm();
 
+  const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+  const onSubmit = async (formData: any) => {
+    const uid = localStorage.getItem("uid") || "";
+    const fetchedMedicalRecord = await getMedicalRecord(uid);
+    const medicalRecord = fetchedMedicalRecord.data.medicalRedicords.data[0];
+    console.log(formData);
+    const weight = parseInt(formData.weight);
+    const height = parseInt(formData.height);
+    const bdate = new Date(formData.date);
+    const data = {
+      id: medicalRecord.id,
+      sex: formData.sex,
+      weight: weight,
+      height: height,
+      birthdate: bdate,
+      bloodtype: formData.bloodType,
+      allergies: formData.allergies,
+    };
+    const response = await updateMedicalRecord(data);
+    if (response.error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Medical Record Updated",
+        variant: "constructive",
+      });
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -48,93 +110,125 @@ export function MedicalRecordCard() {
           Please fill-in your basic information.{" "}
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-6">
-        <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardContent className="grid gap-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="height">Height (centimeters)</Label>
+              <Input
+                id="height"
+                placeholder="in centimeters"
+                type="number"
+                {...register("height", { required: true })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="weight">Weight (kg)</Label>
+              <Input
+                id="weight"
+                placeholder="in kilograms"
+                type="number"
+                {...register("weight", { required: true })}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="date">Birth Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    id="date"
+                    variant={"outline"}
+                    size="sm"
+                    className="w-[240px] justify-start text-left font-normal"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate
+                      ? format(selectedDate, "dd MMM yyyy")
+                      : "Select date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Controller
+                    control={control}
+                    rules={{ required: true }}
+                    name="date"
+                    render={({ field }) => (
+                      <Calendar
+                        initialFocus
+                        mode="single"
+                        selected={field.value}
+                        onSelect={(date) => {
+                          setSelectedDate(date);
+                          field.onChange(date);
+                        }}
+                        {...field}
+                      />
+                    )}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="bloodType">Blood Type</Label>
+              <Controller
+                control={control}
+                name="bloodType"
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} {...field}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {bloodTypes.map((blood) => (
+                        <SelectItem key={blood} value={blood}>
+                          {blood}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+          </div>
           <div className="grid gap-2">
-            <Label htmlFor="height">Height (centimeters)</Label>
-            <Input
-              id="height"
-              placeholder="in centimeters"
-              type="number"
-              {...register("height", { required: true })}
+            <Label htmlFor="sex">Sex</Label>
+            <Controller
+              control={control}
+              name="sex"
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} {...field}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select Bio" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {["Male", "Female"].map((sex) => (
+                      <SelectItem key={sex} value={sex}>
+                        {sex}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="weight">Weight (kg)</Label>
-            <Input
-              id="weight"
-              placeholder="in kilograms"
-              type="number"
-              {...register("weight", { required: true })}
+            <Label htmlFor="allergies">Allergies</Label>
+            <Textarea
+              id="allergies"
+              placeholder="Shrimp, Chicken, Eggs, Peanuts"
+              {...register("allergies")}
             />
           </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="date">Birth Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date"
-                  variant={"outline"}
-                  size="sm"
-                  className="w-[240px] justify-start text-left font-normal"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {selectedDate
-                    ? format(selectedDate, "dd MMM yyyy")
-                    : "Select date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="end">
-                <Controller
-                  control={control}
-                  rules={{ required: true }}
-                  name="date"
-                  render={({ field }) => (
-                    <Calendar
-                      initialFocus
-                      mode="single"
-                      selected={field.value}
-                      onSelect={(date) => {
-                        setSelectedDate(date);
-                        field.onChange(date);
-                      }}
-                      {...field}
-                    />
-                  )}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="bloodType">Blood Type</Label>
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Blood Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="A">A</SelectItem>
-                <SelectItem value="B">B</SelectItem>
-                <SelectItem value="AB">AB</SelectItem>
-                <SelectItem value="O">O</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="allergies">Allergies</Label>
-          <Textarea
-            id="allergies"
-            placeholder="Shrimp, Chicken, Eggs, Peanuts"
-            {...register("allergies")}
-          />
-        </div>
-      </CardContent>
-      <CardFooter className="justify-between space-x-2">
-        <Button variant="ghost">Cancel</Button>
-        <Button>Submit</Button>
-      </CardFooter>
+        </CardContent>
+        <CardFooter className="justify-between space-x-2">
+          <Button variant="ghost">Cancel</Button>
+          <Button type="submit">Submit</Button>
+        </CardFooter>
+      </form>
     </Card>
   );
 }

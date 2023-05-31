@@ -1,6 +1,6 @@
 //update a medical record using graphql
 
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
 
 export const updateMedicalRecord = async (medical: any) => {
   const client = new ApolloClient({
@@ -26,6 +26,7 @@ export const updateMedicalRecord = async (medical: any) => {
         $weight: Int!
         $bloodtype: String!
         $allergies: String!
+        $birthdate: DateTime!
       ) {
         updateMedicalRedicord(
           id: $id
@@ -35,6 +36,7 @@ export const updateMedicalRecord = async (medical: any) => {
             weight: $weight
             bloodtype: $bloodtype
             allergies: $allergies
+            birthdate: $birthdate
           }
         ) {
           data {

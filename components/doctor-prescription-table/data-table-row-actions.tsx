@@ -9,6 +9,7 @@ import {
   Tags,
   Trash,
   Download,
+  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,9 @@ import { Input } from "../ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
 import { useForm } from "react-hook-form";
+import { updateOnePrescription } from "@/query/updateOnePrescription";
+import { useToast } from "../ui/use-toast";
+import { DeleteDoctorPrescription } from "@/query/deletePrescriptionDoctor";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -56,9 +60,47 @@ export function DataTableRowActions<TData>({
   const diag_pres: [any] = row.getValue("diagnosis");
   const patient: [any] = row.getValue("patient");
 
-  async function onSubmit(formData: any) {
-    console.log(formData);
+  const { toast } = useToast();
+
+  async function onEdit(formData: any) {
+    const response = await updateOnePrescription(
+      formData.diagnosis,
+      formData.prescription,
+      id[0],
+      formData.notes
+    );
+    if (response.error) {
+      toast({
+        title: "Error: Prescription not updated",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success: Prescription updated",
+        description: "Your prescription has been updated.",
+        variant: "constructive",
+      });
+    }
   }
+
+  async function cancelPrescription() {
+    const response = await DeleteDoctorPrescription(id[0]);
+    if (response.error) {
+      toast({
+        title: "Error: Prescription not deleted",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success: Prescription deleted",
+        description: "Your prescription has been deleted.",
+        variant: "constructive",
+      });
+    }
+  }
+
   const {
     control,
     register,
@@ -93,7 +135,10 @@ export function DataTableRowActions<TData>({
           <DropdownMenuItem>
             <Download className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Download
-            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => cancelPrescription()}>
+            <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -171,7 +216,7 @@ export function DataTableRowActions<TData>({
               View your prescription here. Click proceed when you are done.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onEdit)}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">

@@ -5,7 +5,7 @@ import { QueryConversationsPatient } from "@/query/patient/findAllConversationsP
 export async function getPatientData(patientid: string) {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
@@ -48,7 +48,7 @@ export async function getConversations(patientid: string) {
 export async function getDoctors() {
   const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
     next: {
-      revalidate: 20,
+      revalidate: 5,
     },
     method: "POST",
     headers: {
