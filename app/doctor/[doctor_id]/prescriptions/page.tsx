@@ -90,8 +90,11 @@ export default async function Page({ params }: pageProps) {
   const id = doctor[0].id;
 
   const fetchedAppointments = await getAppointments(params.doctor_id);
-  const appointments = fetchedAppointments.data.appointments.data.map(
-    (appointment: any) => {
+  const appointments = fetchedAppointments.data.appointments.data
+    .filter((appointment: any) => {
+      return appointment.attributes.status === true;
+    })
+    .map((appointment: any) => {
       return {
         id: [appointment.id, appointment.attributes.uid],
         patient: [
@@ -112,8 +115,7 @@ export default async function Page({ params }: pageProps) {
           appointment.attributes.notes,
         ],
       };
-    }
-  );
+    });
 
   const prescriptions = data.data.prescriptions.data.map(
     (prescription: any) => {
