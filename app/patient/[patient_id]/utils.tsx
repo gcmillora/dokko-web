@@ -1,4 +1,5 @@
 import { findAllDoctorQuery } from "@/query/findDoctors";
+import { QueryOneMedicalRecord } from "@/query/findOneMedicalRecord";
 import { QueryOnePatient } from "@/query/findOnePatient";
 import { QueryConversationsPatient } from "@/query/patient/findAllConversationsPatient";
 
@@ -56,6 +57,26 @@ export async function getDoctors() {
     },
     body: JSON.stringify({
       query: findAllDoctorQuery,
+    }),
+  });
+
+  if (!res.ok) {
+    console.log("error");
+  }
+  return res.json();
+}
+
+export async function getMedicalRecord(uid: string) {
+  const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL || "", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: QueryOneMedicalRecord,
+      variables: {
+        uid: uid,
+      },
     }),
   });
 

@@ -12,7 +12,7 @@ import { BookmarkPlus, Files } from "lucide-react";
 import { BasicHealthRecord } from "@/components/patient-record/basic-health-record";
 import { MedicalRecordCard } from "@/components/patient-record/medical-record";
 import { Metadata } from "next/types";
-import { getPatientData } from "../utils";
+import { getMedicalRecord, getPatientData } from "../utils";
 import { UserNavPatient } from "@/components/patient-dashboard/user-nav";
 
 interface pageProps {
@@ -28,6 +28,9 @@ export default async function RecordPage({ params }: pageProps) {
   const patient = fetchedPatient.data.patients.data.filter((patient: any) => {
     return patient.attributes.status === true;
   });
+
+  const fetchedMedicalRecord = await getMedicalRecord(uid);
+  const medicalRecord = fetchedMedicalRecord.data.medicalRedicords.data[0];
   const id = patient[0].id;
 
   return (
@@ -83,7 +86,7 @@ export default async function RecordPage({ params }: pageProps) {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <MedicalRecordCard />
+                    <MedicalRecordCard record={medicalRecord} />
                   </CardContent>
                 </Card>
               </div>

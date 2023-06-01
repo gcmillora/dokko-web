@@ -53,7 +53,13 @@ async function getMedicalRecord(uid: string) {
   return res.json();
 }
 
-export function MedicalRecordCard() {
+interface pageProps {
+  record: any;
+}
+
+export function MedicalRecordCard(record: any) {
+  const rec = record.record;
+
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
@@ -101,7 +107,6 @@ export function MedicalRecordCard() {
       });
     }
   };
-
   return (
     <Card>
       <CardHeader>
@@ -117,7 +122,7 @@ export function MedicalRecordCard() {
               <Label htmlFor="height">Height (centimeters)</Label>
               <Input
                 id="height"
-                placeholder="in centimeters"
+                placeholder={rec?.attributes?.height.toString() || "in cm"}
                 type="number"
                 {...register("height", { required: true })}
               />
@@ -126,7 +131,7 @@ export function MedicalRecordCard() {
               <Label htmlFor="weight">Weight (kg)</Label>
               <Input
                 id="weight"
-                placeholder="in kilograms"
+                placeholder={rec?.attributes?.weight.toString() || "in kg"}
                 type="number"
                 {...register("weight", { required: true })}
               />
@@ -179,7 +184,11 @@ export function MedicalRecordCard() {
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} {...field}>
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select Type" />
+                      <SelectValue
+                        placeholder={
+                          rec?.attributes?.bloodtype || "Select Type"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {bloodTypes.map((blood) => (
@@ -202,7 +211,9 @@ export function MedicalRecordCard() {
               render={({ field }) => (
                 <Select onValueChange={field.onChange} {...field}>
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select Bio" />
+                    <SelectValue
+                      placeholder={rec?.attributes?.sex || "Select Bio"}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {["Male", "Female"].map((sex) => (
@@ -219,7 +230,7 @@ export function MedicalRecordCard() {
             <Label htmlFor="allergies">Allergies</Label>
             <Textarea
               id="allergies"
-              placeholder="Shrimp, Chicken, Eggs, Peanuts"
+              placeholder={rec?.attributes?.allergies || "Allergies"}
               {...register("allergies")}
             />
           </div>
