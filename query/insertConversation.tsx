@@ -1,4 +1,5 @@
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
+import { uuid } from "uuidv4";
 
 export const insertConversation = async (
   subject: string,
@@ -6,6 +7,7 @@ export const insertConversation = async (
   doctorID: string,
   messageID: string
 ) => {
+  const uid = uuid();
   const client = new ApolloClient({
     uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
     cache: new InMemoryCache(),
@@ -17,6 +19,7 @@ export const insertConversation = async (
       patientID: patientID,
       doctorID: doctorID,
       messageID: messageID,
+      uid: uid,
     },
     mutation: gql`
       mutation (
@@ -24,6 +27,7 @@ export const insertConversation = async (
         $patientID: ID!
         $doctorID: ID!
         $messageID: ID
+        $uid: String!
       ) {
         createConversation(
           data: {
@@ -31,6 +35,7 @@ export const insertConversation = async (
             patient: $patientID
             doctor: $doctorID
             messages: [$messageID]
+            uid: $uid
           }
         ) {
           data {

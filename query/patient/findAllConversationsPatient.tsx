@@ -124,10 +124,6 @@ export const QueryConversationsPatient = `query ($uid: String!) {
         subject
       }
     }
-    meta {
-      pagination {
-        total
-      }
-    }
+
   }
 }`;

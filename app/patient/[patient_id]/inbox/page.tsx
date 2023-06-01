@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   description: "Inbox",
 };
 export default async function Page({ params }: pageProps) {
+  console.log(params.patient_id);
   const fetchedConversations = await getConversations(params.patient_id);
   const conversations = fetchedConversations.data.conversations.data;
   const fetchedDoctors = await getDoctors();
@@ -31,6 +32,8 @@ export default async function Page({ params }: pageProps) {
     return patient.attributes.status === true;
   });
   const id = patient[0].id;
+
+  console.log(conversations);
 
   return (
     <div className="hidden flex-col md:flex">

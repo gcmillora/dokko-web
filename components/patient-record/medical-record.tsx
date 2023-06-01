@@ -122,7 +122,7 @@ export function MedicalRecordCard(record: any) {
               <Label htmlFor="height">Height (centimeters)</Label>
               <Input
                 id="height"
-                placeholder={rec?.attributes?.height.toString() || "in cm"}
+                placeholder={rec?.attributes?.height?.toString() || "in cm"}
                 type="number"
                 {...register("height", { required: true })}
               />
@@ -131,7 +131,7 @@ export function MedicalRecordCard(record: any) {
               <Label htmlFor="weight">Weight (kg)</Label>
               <Input
                 id="weight"
-                placeholder={rec?.attributes?.weight.toString() || "in kg"}
+                placeholder={rec?.attributes?.weight?.toString() || "in kg"}
                 type="number"
                 {...register("weight", { required: true })}
               />
