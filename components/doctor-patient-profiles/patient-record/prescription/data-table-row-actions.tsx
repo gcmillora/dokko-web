@@ -9,7 +9,6 @@ import {
   Tags,
   Trash,
   Download,
-  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -27,24 +26,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
-import { useState } from "react";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
-import { useForm } from "react-hook-form";
-import { updateOnePrescription } from "@/query/updateOnePrescription";
-import { useToast } from "../ui/use-toast";
-import { DeleteDoctorPrescription } from "@/query/deletePrescriptionDoctor";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
 interface DataTableRowActionsProps<TData> {
@@ -57,58 +52,11 @@ export function DataTableRowActions<TData>({
   data,
 }: DataTableRowActionsProps<TData>) {
   const [type, setType] = useState("");
-  const id: [any] = row.getValue("id");
   const diag_pres: [any] = row.getValue("diagnosis");
-  const patient: [any] = row.getValue("patient");
+  const doctor: [any] = row.getValue("doctor");
   const uid = localStorage.getItem("uid") || "";
+  const patient: [any] = row.getValue("patient");
 
-  const { toast } = useToast();
-
-  async function onEdit(formData: any) {
-    const response = await updateOnePrescription(
-      formData.diagnosis,
-      formData.prescription,
-      id[0],
-      formData.notes
-    );
-    if (response.error) {
-      toast({
-        title: "Error: Prescription not updated",
-        description: "Something went wrong",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Success: Prescription updated",
-        description: "Your prescription has been updated.",
-        variant: "constructive",
-      });
-    }
-  }
-
-  async function cancelPrescription() {
-    const response = await DeleteDoctorPrescription(id[0]);
-    if (response.error) {
-      toast({
-        title: "Error: Prescription not deleted",
-        description: "Something went wrong",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Success: Prescription deleted",
-        description: "Your prescription has been deleted.",
-        variant: "constructive",
-      });
-    }
-  }
-
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
   return (
     <Dialog>
       <DropdownMenu>
@@ -128,19 +76,10 @@ export function DataTableRowActions<TData>({
               Open
             </DropdownMenuItem>
           </DialogTrigger>
-          <DialogTrigger asChild>
-            <DropdownMenuItem onClick={() => setType("edit")}>
-              <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-              Edit
-            </DropdownMenuItem>
-          </DialogTrigger>
           <DropdownMenuItem>
             <Download className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Download
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => cancelPrescription()}>
-            <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Delete
+            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -148,7 +87,9 @@ export function DataTableRowActions<TData>({
       {type === "open" && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{`Prescription ${id[0]}`}</DialogTitle>
+            <DialogTitle>{`Prescription ${row.getUniqueValues(
+              "id"
+            )}`}</DialogTitle>
             <DialogDescription>
               View your prescription here. Click proceed when you are done.
             </DialogDescription>
@@ -157,11 +98,11 @@ export function DataTableRowActions<TData>({
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Patient Name
+                  Doctor Name
                 </Label>
                 <Input
-                  id="patient"
-                  value={patient[0]}
+                  id="doctor"
+                  value={doctor[0]}
                   className="col-span-3"
                   disabled
                 />
@@ -219,63 +160,47 @@ export function DataTableRowActions<TData>({
       {type === "edit" && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{`Edit Prescription ${id[0]}`}</DialogTitle>
+            <DialogTitle>Edit Appointment</DialogTitle>
             <DialogDescription>
-              View your prescription here. Click proceed when you are done.
+              Make changes to your appoitment here. Click save when you are
+              done.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(onEdit)}>
+          <form>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Patient Name
+                  Condition
                 </Label>
                 <Input
-                  id="patient"
-                  placeholder={patient[0] || "Patient Name"}
+                  id="condition"
+                  value={row.getValue("condition")}
                   className="col-span-3"
-                  disabled
-                />
-              </div>
-
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
-                  Diagnosis
-                </Label>
-                <Input
-                  id="type"
-                  placeholder={diag_pres[0] || "Diagnosis"}
-                  className="col-span-3"
-                  {...register("diagnosis", { required: true })}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
-                  Prescription
-                </Label>
-                <Input
-                  id="type"
-                  placeholder={diag_pres.at(1) || "Prescription"}
-                  className="col-span-3"
-                  {...register("prescription", { required: true })}
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
+                <Label htmlFor="notes" className="text-right">
                   Notes
                 </Label>
                 <Input
-                  id="type"
-                  placeholder={diag_pres.at(2) || "Notes"}
+                  id="notes"
+                  value={row.getValue("notes")}
                   className="col-span-3"
-                  {...register("notes", { required: true })}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="generalpurpose" className="text-right">
+                  General Purpose
+                </Label>
+                <Input
+                  id="generalpurpose"
+                  value={row.getValue("generalPurpose")}
+                  className="col-span-3"
                 />
               </div>
             </div>
             <DialogFooter>
-              <>
-                <Button type="submit">Confirm</Button>
-              </>
+              <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>
         </DialogContent>

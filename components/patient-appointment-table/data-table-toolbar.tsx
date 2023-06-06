@@ -75,10 +75,13 @@ export function DataTableToolbar<TData>({
     var times: string[] = [];
     if (selectedDate === undefined) return;
     data.map((appointment: any) => {
-      if (appointment.date[1] === selectedDate.toDateString()) {
-        times.push(appointment.date[2]);
+      if (appointment.status === false) {
+        if (appointment.date[1] === selectedDate.toDateString()) {
+          times.push(appointment.date[2]);
+        }
       }
     });
+    console.log(times);
     setExcludedTimes(times);
   }, [selectedDate, data]);
 
@@ -122,8 +125,8 @@ export function DataTableToolbar<TData>({
 
   //allowed times should be all times after the current time and before 4pm (16:00)
   const allowedTimes = [
-    "8:00 AM",
-    "9:00 AM",
+    "08:00 AM",
+    "09:00 AM",
     "10:00 AM",
     "11:00 AM",
     "12:00 PM",

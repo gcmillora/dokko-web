@@ -1,5 +1,5 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { uuid } from 'uuidv4';
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import { uuid } from "uuidv4";
 
 export const insertOneMessage = async (
   payload: string,
@@ -12,9 +12,6 @@ export const insertOneMessage = async (
   const client = new ApolloClient({
     uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
     cache: new InMemoryCache(),
-    headers: {
-      Authorization: `Bearer ${jwtToken}`,
-    },
   });
   const uid = uuid();
 

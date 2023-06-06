@@ -56,6 +56,7 @@ export function Inbox({ conversations, patients }: InboxProps) {
     formState: { errors },
   } = useForm();
   async function onReply(formData: any) {
+    console.log(selectedConversation);
     const jwtToken = localStorage.getItem("jwtToken") || "";
     const patientid = localStorage.getItem("id") || "";
     const patientuid = localStorage.getItem("uid") || "";
@@ -71,6 +72,8 @@ export function Inbox({ conversations, patients }: InboxProps) {
       (message: any) => message.id
     );
     const updatedIds = [...messages, responseMessage.createMessage.data.id];
+    console.log(updatedIds);
+    console.log(selectedConversation.id);
     const updateConversation = await updateConversationMessages(
       updatedIds,
       selectedConversation.id

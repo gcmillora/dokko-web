@@ -55,6 +55,14 @@ export function MainNav({ className, ...props }: IMyComponentProps) {
         Prescriptions
       </Link>
       {props?.type === "doctor" && (
+        <Link
+          href={`/${props?.type}/${props?.id}/patients`}
+          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          Patients
+        </Link>
+      )}
+      {props?.type === "doctor" && (
         <span className="text-sm font-medium text-muted-foreground transition-colors ">
           Settings{" "}
         </span>

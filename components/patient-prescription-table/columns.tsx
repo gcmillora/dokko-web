@@ -43,13 +43,14 @@ export const columns: ColumnDef<any>[] = [
     },
   },
   {
-    accessorKey: "appointment",
+    accessorKey: "date",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Appointment" />
+      <DataTableColumnHeader column={column} title="Date" />
     ),
-    cell: ({ row }) => (
-      <div className="w-[80px]">{row.getValue("appointment")}</div>
-    ),
+    cell: ({ row }) => {
+      const data: [any] = row.getValue("date");
+      return <div className="w-[150px]">{data.at(1)}</div>;
+    },
     enableSorting: false,
     enableHiding: false,
   },

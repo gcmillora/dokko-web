@@ -2,14 +2,15 @@
 
 import { Row } from "@tanstack/react-table";
 import {
+  BookOpen,
+  Check,
   Copy,
   MoreHorizontal,
   Pen,
   Star,
   Tags,
   Trash,
-  Download,
-  X,
+  Video,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -41,11 +42,13 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
-import { useForm } from "react-hook-form";
-import { updateOnePrescription } from "@/query/updateOnePrescription";
+import { X } from "lucide-react";
+import { updateOneAppointment } from "@/query/updateOneAppointment";
 import { useToast } from "../ui/use-toast";
-import { DeleteDoctorPrescription } from "@/query/deletePrescriptionDoctor";
-import Link from "next/link";
+import { updateOneAppointmentById } from "@/query/updateOneAppointment copy";
+import { createPatientMeetingToken } from "@/query/video-chat/createPatientMeetingToken";
+import { Textarea } from "../ui/textarea";
+import { DeletePatient } from "@/query/deletePatient";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -56,59 +59,37 @@ export function DataTableRowActions<TData>({
   row,
   data,
 }: DataTableRowActionsProps<TData>) {
-  const [type, setType] = useState("");
-  const id: [any] = row.getValue("id");
-  const diag_pres: [any] = row.getValue("diagnosis");
-  const patient: [any] = row.getValue("patient");
-  const uid = localStorage.getItem("uid") || "";
-
   const { toast } = useToast();
+  const fullName: string = row.getValue("fullName") || "";
+  const pId: [any] = row.getValue("id");
+  const phoneNumber: string = row.getValue("phoneNumber") || "";
+  const email: string = row.getValue("email") || "";
+  const address: string = row.getValue("address") || "";
+  const uid = localStorage.getItem("uid");
 
-  async function onEdit(formData: any) {
-    const response = await updateOnePrescription(
-      formData.diagnosis,
-      formData.prescription,
-      id[0],
-      formData.notes
-    );
+  const [type, setType] = useState("");
+
+  async function deleteDoctor() {
+    const response = await DeletePatient(pId[0]);
     if (response.error) {
       toast({
-        title: "Error: Prescription not updated",
-        description: "Something went wrong",
+        title: "Deleting patient failed.",
+        description: "Please try again later.",
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Success: Prescription updated",
-        description: "Your prescription has been updated.",
+        title: "Patient deleted successfully.",
+        description: "Your appointment has been deleted.",
         variant: "constructive",
       });
     }
   }
 
-  async function cancelPrescription() {
-    const response = await DeleteDoctorPrescription(id[0]);
-    if (response.error) {
-      toast({
-        title: "Error: Prescription not deleted",
-        description: "Something went wrong",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Success: Prescription deleted",
-        description: "Your prescription has been deleted.",
-        variant: "constructive",
-      });
-    }
+  function goToPatientProfile() {
+    window.location.href = `/doctor/${uid}/patients/${pId.at(1)}`;
   }
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
   return (
     <Dialog>
       <DropdownMenu>
@@ -122,24 +103,25 @@ export function DataTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuItem onClick={() => goToPatientProfile()}>
+            <BookOpen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Open
+          </DropdownMenuItem>
           <DialogTrigger asChild>
             <DropdownMenuItem onClick={() => setType("open")}>
-              <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              <BookOpen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
               Open
             </DropdownMenuItem>
           </DialogTrigger>
           <DialogTrigger asChild>
-            <DropdownMenuItem onClick={() => setType("edit")}>
+            <DropdownMenuItem onClick={() => setType("edit")} disabled>
               <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
               Edit
             </DropdownMenuItem>
           </DialogTrigger>
+
           <DropdownMenuItem>
-            <Download className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Download
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => cancelPrescription()}>
-            <X className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -148,64 +130,58 @@ export function DataTableRowActions<TData>({
       {type === "open" && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{`Prescription ${id[0]}`}</DialogTitle>
+            <DialogTitle>{`Patient ${pId[0]}`}</DialogTitle>
+
             <DialogDescription>
-              View your prescription here. Click proceed when you are done.
+              View patient information here. Click proceed when you are done.
             </DialogDescription>
           </DialogHeader>
           <form>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Patient Name
+                <Label htmlFor="fullName" className="text-right">
+                  Full Name
                 </Label>
                 <Input
-                  id="patient"
-                  value={patient[0]}
-                  className="col-span-3"
-                  disabled
-                />
-              </div>
-
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
-                  Diagnosis
-                </Label>
-                <Input
-                  id="type"
-                  value={diag_pres[0]}
+                  id="fullName"
+                  value={fullName}
                   className="col-span-3"
                   disabled
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
-                  Prescription
+                <Label htmlFor="email" className="text-right">
+                  E-mail
                 </Label>
                 <Input
-                  id="type"
-                  value={diag_pres.at(1)}
+                  id="date"
+                  value={email}
+                  disabled
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="phoneNumber" className="text-right">
+                  Phone
+                </Label>
+                <Input
+                  id="phoneNumber"
+                  value={phoneNumber}
                   className="col-span-3"
                   disabled
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
-                  Notes
+                <Label htmlFor="address" className="text-right">
+                  Address
                 </Label>
-                <Input
-                  id="type"
-                  value={diag_pres.at(2)}
+                <Textarea
+                  id="address"
+                  value={address}
                   className="col-span-3"
                   disabled
                 />
               </div>
-              <Link
-                href={`/doctor/${uid}/patients/${patient.at(1)}`}
-                className="text-xs text-blue-500 text-right"
-              >
-                View Patient Data
-              </Link>
             </div>
             <DialogFooter>
               <DialogClose>
@@ -215,71 +191,55 @@ export function DataTableRowActions<TData>({
           </form>
         </DialogContent>
       )}
-
+      {/* 
       {type === "edit" && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{`Edit Prescription ${id[0]}`}</DialogTitle>
+            <DialogTitle>Edit Appointment</DialogTitle>
             <DialogDescription>
-              View your prescription here. Click proceed when you are done.
+              Make changes to your appoitment here. Click save when you are
+              done.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(onEdit)}>
+          <form>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Patient Name
+                  Condition
                 </Label>
                 <Input
-                  id="patient"
-                  placeholder={patient[0] || "Patient Name"}
+                  id="condition"
+                  value={row.getValue("condition")}
                   className="col-span-3"
-                  disabled
-                />
-              </div>
-
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
-                  Diagnosis
-                </Label>
-                <Input
-                  id="type"
-                  placeholder={diag_pres[0] || "Diagnosis"}
-                  className="col-span-3"
-                  {...register("diagnosis", { required: true })}
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
-                  Prescription
-                </Label>
-                <Input
-                  id="type"
-                  placeholder={diag_pres.at(1) || "Prescription"}
-                  className="col-span-3"
-                  {...register("prescription", { required: true })}
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="type" className="text-right">
+                <Label htmlFor="notes" className="text-right">
                   Notes
                 </Label>
                 <Input
-                  id="type"
-                  placeholder={diag_pres.at(2) || "Notes"}
+                  id="notes"
+                  value={row.getValue("notes")}
                   className="col-span-3"
-                  {...register("notes", { required: true })}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="generalpurpose" className="text-right">
+                  General Purpose
+                </Label>
+                <Input
+                  id="generalpurpose"
+                  value={row.getValue("generalPurpose")}
+                  className="col-span-3"
                 />
               </div>
             </div>
             <DialogFooter>
-              <>
-                <Button type="submit">Confirm</Button>
-              </>
+              <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>
         </DialogContent>
-      )}
+      )}  */}
     </Dialog>
   );
 }

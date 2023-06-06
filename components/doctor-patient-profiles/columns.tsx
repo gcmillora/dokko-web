@@ -9,11 +9,6 @@ import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import Link from "next/link";
 import { patientAppointmentsQueryByID } from "@/query/patient/findAllAppointmentsByPatients";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../ui/hover-card";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -48,56 +43,54 @@ export const columns: ColumnDef<any>[] = [
     },
   },
   {
-    accessorKey: "date",
+    accessorKey: "fullName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
+      <DataTableColumnHeader column={column} title="Full Name" />
     ),
-    cell: ({ row }) => {
-      const data: [any] = row.getValue("date");
-      return <div className="w-[150px]">{data.at(1)}</div>;
-    },
-    enableSorting: false,
-    enableHiding: false,
+    cell: ({ row }) => (
+      <div className="w-[150px]">{row.getValue("fullName")}</div>
+    ),
   },
   {
-    accessorKey: "patient",
+    accessorKey: "address",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Patient" />
+      <DataTableColumnHeader column={column} title="Address" />
     ),
     cell: ({ row }) => {
-      const data: [any] = row.getValue("patient");
+      const address: string = row.getValue("address");
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">{data[0]}</span>
+          <span className="max-w-[500px] truncate font-medium">{address}</span>
         </div>
       );
     },
   },
-
   {
-    accessorKey: "diagnosis",
+    accessorKey: "email",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Diagnosis" />
+      <DataTableColumnHeader column={column} title="E-mail" />
     ),
     cell: ({ row }) => {
-      const data: [any] = row.getValue("diagnosis");
       return (
         <div className="flex space-x-2">
-          <HoverCard>
-            <HoverCardTrigger className="max-w-[500px] truncate font-medium">
-              {data[0]}
-            </HoverCardTrigger>
-            <HoverCardContent className="flex flex-col gap-2">
-              <div className="flex flex-row gap-2">
-                <span className="font-medium">Diagnosis:</span>
-                <span className="text-sm">{data[0]}</span>
-              </div>
-              <div className="flex flex-row gap-2">
-                <span className="font-medium">Prescription:</span>
-                <span className="text-sm">{data.at(1)}</span>
-              </div>
-            </HoverCardContent>
-          </HoverCard>
+          <span className="max-w-[500px] truncate font-medium">
+            {row.getValue("email")}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "phoneNumber",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Phone" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            {row.getValue("phoneNumber")}
+          </span>
         </div>
       );
     },

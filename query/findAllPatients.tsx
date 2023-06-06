@@ -38,6 +38,9 @@ export const QueryAllPatients = `query {
         uid
         fullName
         status
+        email
+        phoneNumber
+        address
       }
     }
   }

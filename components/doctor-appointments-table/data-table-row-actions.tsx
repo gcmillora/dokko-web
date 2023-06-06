@@ -62,6 +62,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import Link from "next/link";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -84,6 +85,7 @@ export function DataTableRowActions<TData>({
   const [excludedTimes, setExcludedTimes] = useState<string[]>([]);
   const router = useRouter();
   const { toast } = useToast();
+  const uid = localStorage.getItem("uid") || "";
 
   const {
     control,
@@ -292,6 +294,12 @@ export function DataTableRowActions<TData>({
                   disabled
                 />
               </div>
+              <Link
+                href={`/doctor/${uid}/patients/${patient.at(1)}`}
+                className="text-xs text-blue-500 text-right"
+              >
+                View Patient Data
+              </Link>
             </div>
             <DialogFooter>
               <DialogClose>

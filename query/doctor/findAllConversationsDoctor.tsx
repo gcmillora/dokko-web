@@ -95,6 +95,7 @@ export const QueryConversationsDoctor = `query ($uid: String!) {
             id
             attributes {
               fullName
+              uid
               profilepicture {
                 data {
                   id
@@ -111,6 +112,7 @@ export const QueryConversationsDoctor = `query ($uid: String!) {
             id
             attributes {
               fullName
+              uid
               profilepicture {
                 data {
                   id

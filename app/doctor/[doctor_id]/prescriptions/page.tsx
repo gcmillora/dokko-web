@@ -133,7 +133,23 @@ export default async function Page({ params }: pageProps) {
           prescription.attributes.doctor.data.id,
         ],
         appointment: prescription.attributes.appointment.data.id,
+        date: [
+          new Date(
+            prescription.attributes.appointment.data.attributes.appointmentDate
+          ),
+          new Date(
+            prescription.attributes.appointment.data.attributes.appointmentDate
+          ).toDateString(),
+          new Date(
+            prescription.attributes.appointment.data.attributes.appointmentDate
+          ).toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          prescription.attributes.appointment.data.attributes.appointmentDate,
+        ],
         uid: prescription.attributes.uid,
+
         diagnosis: [
           prescription.attributes.diagnosis,
           prescription.attributes.prescription,
