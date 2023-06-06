@@ -185,7 +185,12 @@ export default async function Page({ params }: PageProps) {
             <AppTable data={appointments} columns={apcol} />
           </TabsContent>
           <TabsContent value="prescriptions" className="space-y-4">
-            <PresTable data={prescriptions} columns={prepcol} />
+            <PresTable
+              data={prescriptions}
+              columns={prepcol}
+              appointments={appointments}
+              patient={patient}
+            />
           </TabsContent>
         </Tabs>
       </div>

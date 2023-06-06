@@ -18,16 +18,43 @@ import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { insertOneAppointment } from "@/query/insertOneAppointment";
 import { DialogClose } from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
+import { insertOnePrescription } from "@/query/insertOnePrescription";
+import { Textarea } from "@/components/ui/textarea";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   data: any;
+  appointments: any;
+  patients: any;
 }
 
 export function DataTableToolbar<TData>({
   table,
   data,
+  appointments,
+  patients,
 }: DataTableToolbarProps<TData>) {
+  appointments = appointments.filter(
+    (appointment: any) => appointment.patient[2] === patients.id
+  );
   const isFiltered =
     table.getPreFilteredRowModel().rows.length >
     table.getFilteredRowModel().rows.length;
@@ -35,7 +62,47 @@ export function DataTableToolbar<TData>({
   //-------------------------
 
   const router = useRouter();
+  const { toast } = useToast();
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
+  const onSubmit = async (formData: any) => {
+    const patientid = appointments.find(
+      (appointment: any) => appointment.id[0] === formData.appointment
+    ).patient[2];
+    const jwtToken = localStorage.getItem("jwtToken") || "";
+    const response = await insertOnePrescription(
+      jwtToken,
+      patientid,
+      appointments[0].doctor[2],
+      formData.prescription,
+      true,
+      formData.appointment,
+      formData.notes,
+      formData.diagnosis
+    );
+
+    if (response.error) {
+      toast({
+        variant: "destructive",
+        title: "Prescription Creation Failed",
+        description: "Please try again later",
+      });
+    } else {
+      toast({
+        variant: "constructive",
+        title: "Prescription Created",
+        description: `Your appointment has been created with the following details:\n
+        Diagnosis: ${formData.diagnosis}\n
+        Prescription: ${formData.prescription}\n
+        `,
+      });
+    }
+  };
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
@@ -58,6 +125,119 @@ export function DataTableToolbar<TData>({
             <X className="ml-2 h-4 w-4" />
           </Button>
         )}
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm" className="ml-auto h-8 lg:flex">
+              <Plus className="mr-2 h-4 w-4" />
+              Create New
+            </Button>
+          </DialogTrigger>
+
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Create Prescription</DialogTitle>
+              <DialogDescription>
+                Create a prescription here. Click create when you are done.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="appointment" className="text-right">
+                    Appointment
+                  </Label>
+                  <Controller
+                    control={control}
+                    name="appointment"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} {...field}>
+                        <SelectTrigger className="col-span-3">
+                          <SelectValue placeholder="Select Appointment" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {appointments.map((appointment: any) => (
+                            <SelectItem
+                              key={appointment.id}
+                              value={appointment.id[0]}
+                            >
+                              {`#${appointment.id[0]} | ${appointment.patient[0]}`}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.appointment && (
+                    <span className="px-1 text-xs text-red-600 col-span-4 -mt-2 text-right ">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="diagnosis" className="text-right">
+                    Diagnosis
+                  </Label>
+                  <Input
+                    id="diagnosis"
+                    placeholder="i.e. Diagnosis"
+                    className="col-span-3"
+                    {...register("diagnosis", {
+                      required: true,
+                    })}
+                  />
+
+                  {errors.diagnosis && (
+                    <span className="px-1 text-xs text-red-600 col-span-4 -mt-2 text-right ">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="prescription" className="text-right">
+                    Prescription
+                  </Label>
+                  <Textarea
+                    id="prescription"
+                    placeholder="i.e. Ibruofen"
+                    className="col-span-3"
+                    {...register("prescription", {
+                      required: true,
+                    })}
+                  />
+                  {errors.prescription && (
+                    <span className="px-1 text-xs text-red-600 col-span-4 -mt-2 text-right ">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="notes" className="text-right">
+                    Notes
+                  </Label>
+                  <Input
+                    id="notes"
+                    placeholder="i.e. Stay hydrated, and eat healthy"
+                    className="col-span-3"
+                    {...register("notes", {
+                      required: true,
+                    })}
+                  />
+                  {errors.notes && (
+                    <span className="px-1 text-xs text-red-600 col-span-4 -mt-2 text-right ">
+                      This field is required
+                    </span>
+                  )}
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="submit">Create</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
       <DataTableViewOptions table={table} />
     </div>
