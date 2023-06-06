@@ -97,6 +97,7 @@ export function MedicalRecordCard({ record }: MedicalRecordCardProps) {
               <Label htmlFor="height">Height (centimeters)</Label>
               <Input
                 id="height"
+                disabled
                 placeholder={record?.attributes?.height?.toString() || "in cm"}
                 type="number"
                 {...register("height", { required: true })}
@@ -106,6 +107,7 @@ export function MedicalRecordCard({ record }: MedicalRecordCardProps) {
               <Label htmlFor="weight">Weight (kg)</Label>
               <Input
                 id="weight"
+                disabled
                 placeholder={record?.attributes?.weight?.toString() || "in kg"}
                 type="number"
                 {...register("weight", { required: true })}
@@ -138,6 +140,7 @@ export function MedicalRecordCard({ record }: MedicalRecordCardProps) {
                       <Calendar
                         initialFocus
                         mode="single"
+                        disabled
                         selected={field.value}
                         onSelect={(date) => {
                           setSelectedDate(date);
@@ -157,7 +160,7 @@ export function MedicalRecordCard({ record }: MedicalRecordCardProps) {
                 name="bloodType"
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange} {...field}>
+                  <Select onValueChange={field.onChange} {...field} disabled>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue
                         placeholder={
@@ -184,7 +187,7 @@ export function MedicalRecordCard({ record }: MedicalRecordCardProps) {
               name="sex"
               rules={{ required: true }}
               render={({ field }) => (
-                <Select onValueChange={field.onChange} {...field}>
+                <Select onValueChange={field.onChange} {...field} disabled>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue
                       placeholder={record?.attributes?.sex || "Select Bio"}
@@ -204,16 +207,14 @@ export function MedicalRecordCard({ record }: MedicalRecordCardProps) {
           <div className="grid gap-2">
             <Label htmlFor="allergies">Allergies</Label>
             <Textarea
+              disabled
               id="allergies"
               placeholder={record?.attributes?.allergies || "Allergies"}
               {...register("allergies")}
             />
           </div>
         </CardContent>
-        <CardFooter className="justify-between space-x-2">
-          <Button variant="ghost">Cancel</Button>
-          <Button type="submit">Submit</Button>
-        </CardFooter>
+        <CardFooter className="justify-between space-x-2"></CardFooter>
       </form>
     </Card>
   );

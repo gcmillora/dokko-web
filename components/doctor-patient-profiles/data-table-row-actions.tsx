@@ -2,6 +2,7 @@
 
 import { Row } from "@tanstack/react-table";
 import {
+  ArrowBigRight,
   BookOpen,
   Check,
   Copy,
@@ -104,8 +105,8 @@ export function DataTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem onClick={() => goToPatientProfile()}>
-            <BookOpen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Open
+            <ArrowBigRight className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            View Record
           </DropdownMenuItem>
           <DialogTrigger asChild>
             <DropdownMenuItem onClick={() => setType("open")}>

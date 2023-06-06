@@ -72,6 +72,7 @@ export function BasicHealthRecord() {
             <div className="grid gap-2">
               <Label htmlFor="fullName">Full Name</Label>
               <Input
+                disabled
                 id="fullName"
                 placeholder="Juan Dela Cruz"
                 {...register("fullName", { required: true })}
@@ -81,6 +82,7 @@ export function BasicHealthRecord() {
           <div className="grid gap-2">
             <Label htmlFor="contact">Contact</Label>
             <Input
+              disabled
               id="contact"
               placeholder="09123456789"
               {...register("contact", { required: true })}
@@ -89,6 +91,7 @@ export function BasicHealthRecord() {
           <div className="grid gap-2">
             <Label htmlFor="description">Address</Label>
             <Textarea
+              disabled
               id="address"
               placeholder="Please include your appropriate address."
               {...register("address", { required: true })}
@@ -96,10 +99,7 @@ export function BasicHealthRecord() {
           </div>
         </CardContent>
 
-        <CardFooter className="justify-between space-x-2">
-          <Button variant="ghost">Cancel</Button>
-          <Button type="submit">Submit</Button>
-        </CardFooter>
+        <CardFooter className="justify-between space-x-2"></CardFooter>
       </form>
     </Card>
   );
