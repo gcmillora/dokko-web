@@ -7,7 +7,7 @@ export const updateMedicalRecord = async (medical: any) => {
     uri: process.env.NEXT_PUBLIC_BACKEND_API_URL,
     cache: new InMemoryCache(),
   });
-
+  //do not update null values in medical paramater
   const { data } = await client.mutate({
     variables: {
       id: medical.id,
@@ -21,12 +21,12 @@ export const updateMedicalRecord = async (medical: any) => {
     mutation: gql`
       mutation (
         $id: ID!
-        $sex: String!
-        $height: Int!
-        $weight: Int!
-        $bloodtype: String!
-        $allergies: String!
-        $birthdate: DateTime!
+        $sex: String
+        $height: Int
+        $weight: Int
+        $bloodtype: String
+        $allergies: String
+        $birthdate: DateTime
       ) {
         updateMedicalRedicord(
           id: $id

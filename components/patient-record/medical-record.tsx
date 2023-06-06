@@ -76,11 +76,18 @@ export function MedicalRecordCard(record: any) {
   const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
   const onSubmit = async (formData: any) => {
+    console.log(formData);
+    for (const [key, value] of Object.entries(formData)) {
+      if (value === "") {
+        formData[key] = null;
+      }
+    }
     const uid = localStorage.getItem("uid") || "";
     const fetchedMedicalRecord = await getMedicalRecord(uid);
     const medicalRecord = fetchedMedicalRecord.data.medicalRedicords.data[0];
     console.log(formData);
     const weight = parseInt(formData.weight);
+
     const height = parseInt(formData.height);
     const bdate = new Date(formData.date);
     const data = {
@@ -124,7 +131,7 @@ export function MedicalRecordCard(record: any) {
                 id="height"
                 placeholder={rec?.attributes?.height?.toString() || "in cm"}
                 type="number"
-                {...register("height", { required: true })}
+                {...register("height")}
               />
             </div>
             <div className="grid gap-2">
@@ -133,7 +140,7 @@ export function MedicalRecordCard(record: any) {
                 id="weight"
                 placeholder={rec?.attributes?.weight?.toString() || "in kg"}
                 type="number"
-                {...register("weight", { required: true })}
+                {...register("weight")}
               />
             </div>
           </div>
@@ -157,7 +164,7 @@ export function MedicalRecordCard(record: any) {
                 <PopoverContent className="w-auto p-0" align="end">
                   <Controller
                     control={control}
-                    rules={{ required: true }}
+                    rules={{}}
                     name="date"
                     render={({ field }) => (
                       <Calendar
@@ -180,7 +187,7 @@ export function MedicalRecordCard(record: any) {
               <Controller
                 control={control}
                 name="bloodType"
-                rules={{ required: true }}
+                rules={{}}
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} {...field}>
                     <SelectTrigger className="w-[180px]">
@@ -207,7 +214,7 @@ export function MedicalRecordCard(record: any) {
             <Controller
               control={control}
               name="sex"
-              rules={{ required: true }}
+              rules={{}}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} {...field}>
                   <SelectTrigger className="w-[180px]">
