@@ -26,8 +26,10 @@ import { Controller, useForm } from "react-hook-form";
 import { addDays, format } from "date-fns";
 import { updateOnePatient } from "@/query/updateOnePatient";
 import { useToast } from "@/components/ui/use-toast";
-
-export function BasicHealthRecord() {
+interface BasicHealthRecordProps {
+  patient: any;
+}
+export function BasicHealthRecord({ patient }: BasicHealthRecordProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
@@ -75,6 +77,7 @@ export function BasicHealthRecord() {
                 disabled
                 id="fullName"
                 placeholder="Juan Dela Cruz"
+                value={patient.fullName}
                 {...register("fullName", { required: true })}
               />
             </div>
@@ -85,6 +88,7 @@ export function BasicHealthRecord() {
               disabled
               id="contact"
               placeholder="09123456789"
+              value={patient.phoneNumber}
               {...register("contact", { required: true })}
             />
           </div>
@@ -93,6 +97,7 @@ export function BasicHealthRecord() {
             <Textarea
               disabled
               id="address"
+              value={patient.address}
               placeholder="Please include your appropriate address."
               {...register("address", { required: true })}
             />

@@ -164,7 +164,7 @@ export default async function Page({ params }: PageProps) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <BasicHealthRecord />
+                  <BasicHealthRecord patient={patient} />
                 </CardContent>
               </Card>
               <Card className="col-span-3">
