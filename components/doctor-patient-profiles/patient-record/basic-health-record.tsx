@@ -77,7 +77,7 @@ export function BasicHealthRecord({ patient }: BasicHealthRecordProps) {
                 disabled
                 id="fullName"
                 placeholder="Juan Dela Cruz"
-                value={patient.fullName}
+                value={patient.attributes.fullName}
                 {...register("fullName", { required: true })}
               />
             </div>
@@ -88,7 +88,7 @@ export function BasicHealthRecord({ patient }: BasicHealthRecordProps) {
               disabled
               id="contact"
               placeholder="09123456789"
-              value={patient.phoneNumber}
+              value={patient.attributes.phoneNumber}
               {...register("contact", { required: true })}
             />
           </div>
@@ -97,7 +97,7 @@ export function BasicHealthRecord({ patient }: BasicHealthRecordProps) {
             <Textarea
               disabled
               id="address"
-              value={patient.address}
+              value={patient.attributes.address}
               placeholder="Please include your appropriate address."
               {...register("address", { required: true })}
             />
