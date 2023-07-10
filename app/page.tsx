@@ -168,6 +168,87 @@ export default function Home() {
               </p>
             </div>
           </section>
+          <section id="team" className="container py-8 md:py-12 lg:py-24">
+            <div className="mx-auto flex max-w-[58rem] flex-col items-center gap-4 text-center">
+              <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl font-bold">
+                Our Doctors{" "}
+              </h2>
+              <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
+                Meet the team behind Dokko.
+              </p>
+            </div>
+            <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3 mt-4">
+              <div className="relative overflow-hidden rounded-lg border bg-background p-2">
+                <div className="flex h-[340px] flex-col justify-between rounded-md p-6">
+                  <Image
+                    src="https://res.cloudinary.com/dvou5ye9x/image/upload/v1686104745/freestock_41742406_mojedp.jpg"
+                    alt="Doctor"
+                    width={162}
+                    height={162}
+                    className="rounded-full object-cover object-center mx-auto mb-4 "
+                  />
+                  <div className="">
+                    <h3 className="font-bold">Dr. Kristine Keith Napolitano</h3>
+                    <p className="text-sm text-muted-foreground">
+                      General Practitioner
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      University of the Philippines Mindanao
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Siliman University Medical School{" "}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="relative overflow-hidden rounded-lg border bg-background p-2">
+                <div className="flex h-[340] flex-col justify-between rounded-md p-6">
+                  <Image
+                    src="https://res.cloudinary.com/dvou5ye9x/image/upload/v1686105410/depositphotos_48146239-stock-photo-southeast-asian-doctor_vztajh.webp"
+                    alt="Doctor"
+                    width={162}
+                    height={162}
+                    className="rounded-full object-cover object-center mx-auto mb-4"
+                  />
+                  <div className="mt-7">
+                    <h3 className="font-bold">Ron Bryan Vertudes</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Pediatrician{" "}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      University of the Philippines Mindanao
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      U.P. College of Medicine{" "}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="relative overflow-hidden rounded-lg border bg-background p-2">
+                <div className="flex h-[340px] flex-col justify-between rounded-md p-6">
+                  <Image
+                    src="https://res.cloudinary.com/dvou5ye9x/image/upload/v1686105933/portrait-happy-arabic-doctor-male-blue-background-square-smiling-to-camera-wearing-white-uniform-posing-headshot-cheerful-233544543_x5cppw.webp"
+                    alt="Doctor"
+                    width={162}
+                    height={162}
+                    className="rounded-full object-cover object-center mx-auto mb-4 "
+                  />
+                  <div className="mt-6">
+                    <h3 className="font-bold">Ferdinand Gador</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Psychiatrist{" "}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      University of the Philippines Mindanao
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      ADMU Medical School{" "}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
           <section
             id="open-source"
             className="container py-8 md:py-12 lg:py-24"
